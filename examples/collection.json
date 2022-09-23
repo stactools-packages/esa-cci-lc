@@ -1,0 +1,148 @@
+{
+  "type": "Collection",
+  "id": "esa-cci-lc",
+  "stac_version": "1.0.0",
+  "description": "This dataset provides global maps describing the land surface classes, which have been defined using the United Nations Food and Agriculture Organization's (UN FAO) Land Cover Classification System (LCCS). In addition to the land cover (LC) maps, four quality flags are produced to document the reliability of the classification and change detection. In order to ensure continuity, these land cover maps are consistent with the series of global annual LC maps from the 1990s to 2015 produced by the European Space Agency (ESA) Climate Change Initiative (CCI).",
+  "links": [
+    {
+      "rel": "root",
+      "href": "./collection.json",
+      "type": "application/json",
+      "title": "ESA Climate Change Initiative Land Cover"
+    },
+    {
+      "rel": "item",
+      "href": "./item.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "license",
+      "href": "https://cds.climate.copernicus.eu/api/v2/terms/static/satellite-land-cover.pdf",
+      "type": "text/html",
+      "title": "ESA CCI license"
+    },
+    {
+      "rel": "license",
+      "href": "https://cds.climate.copernicus.eu/api/v2/terms/static/licence-to-use-copernicus-products.pdf",
+      "type": "text/html",
+      "title": "COPERNICUS license"
+    },
+    {
+      "rel": "license",
+      "href": "https://cds.climate.copernicus.eu/api/v2/terms/static/vito-proba-v.pdf",
+      "type": "text/html",
+      "title": "VITO License"
+    },
+    {
+      "rel": "about",
+      "href": "https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-land-cover",
+      "type": "text/html",
+      "title": "Product Landing Page"
+    },
+    {
+      "rel": "about",
+      "href": "https://datastore.copernicus-climate.eu/documents/satellite-land-cover/D5.3.1_PUGS_ICDR_LC_v2.1.x_PRODUCTS_v1.1.pdf",
+      "type": "application/pdf",
+      "title": "Product user guide for version 2.1"
+    },
+    {
+      "rel": "about",
+      "href": "https://datastore.copernicus-climate.eu/documents/satellite-land-cover/D3.3.11-v1.0_PUGS_CDR_LC-CCI_v2.0.7cds_Products_v1.0.1_APPROVED_Ver1.pdf",
+      "type": "application/pdf",
+      "title": "Product user guide for version 2.0"
+    },
+    {
+      "rel": "cite-as",
+      "href": "https://doi.org/10.24381/cds.006f2c9a"
+    },
+    {
+      "rel": "self",
+      "href": "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/examples/collection.json",
+      "type": "application/json"
+    }
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
+  ],
+  "sci:doi": "10.24381/cds.006f2c9a",
+  "item_assets": {
+    "cog": {
+      "title": "Processed Cloud-Optimized GeoTIFF file",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "netcdf": {
+      "title": "Original netCDF 4 file",
+      "type": "application/netcdf",
+      "roles": [
+        "data",
+        "source"
+      ]
+    }
+  },
+  "title": "ESA Climate Change Initiative Land Cover",
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -180.0,
+          -90.0,
+          180.0,
+          90.0
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "1992-01-01T00:00:00Z",
+          "2020-12-31T23:59:59Z"
+        ]
+      ]
+    }
+  },
+  "license": "proprietary",
+  "keywords": [
+    "ESA",
+    "Climate Change Initiative",
+    "CCI",
+    "Land Cover",
+    "LC",
+    "netCDF",
+    "COG"
+  ],
+  "providers": [
+    {
+      "name": "VITO",
+      "description": "Provides source data, e.g. PROBA-V.",
+      "roles": [
+        "licensor"
+      ],
+      "url": "https://vito.be"
+    },
+    {
+      "name": "ESA",
+      "description": "The ESA Climate Change Initiative (CCI) lets produce the dataset.",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://esa.int"
+    },
+    {
+      "name": "Copernicus",
+      "description": "Hosts the data on the Copernicus Climate Data Store (CDS).",
+      "roles": [
+        "host",
+        "licensor"
+      ],
+      "url": "https://copernicus.eu"
+    }
+  ],
+  "summaries": {
+  }
+}

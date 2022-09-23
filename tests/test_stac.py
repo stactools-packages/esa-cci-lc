@@ -8,7 +8,7 @@ def test_create_collection() -> None:
     collection.set_self_href("")
 
     # Check that it has some required attributes
-    assert collection.id == "my-collection-id"
+    assert collection.id == "esa-cci-lc"
     # self.assertEqual(collection.other_attr...
 
     # Validate

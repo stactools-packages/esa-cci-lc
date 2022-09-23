@@ -6,19 +6,33 @@
 - Package: `stactools.esa_cci_lc`
 - [stactools-esa-cci-lc on PyPI](https://pypi.org/project/stactools-esa-cci-lc/)
 - Owner: @m-mohr
-- [Dataset homepage](http://example.com)
+- Dataset homepage:
+  - <https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-land-cover>
 - STAC extensions used:
   - [proj](https://github.com/stac-extensions/projection/)
 - Extra fields:
   - `esa-cci-lc:custom`: A custom attribute
-- [Browse the example in human-readable form](https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/examples/collection.json)
 
-stactools package for ESA's Climate Change Initiative (CCI) Land Cover (LC) product.
+A stactools package for ESA's Climate Change Initiative (CCI) Land Cover (LC)
+product.
+
+This dataset provides global maps describing the land surface classes,
+which have been defined using the United Nations Food and Agriculture
+Organization's (UN FAO) Land Cover Classification System (LCCS).
+In addition to the land cover (LC) maps, four quality flags are produced to
+document the reliability of the classification and change detection.
+In order to ensure continuity, these land cover maps are consistent with the
+series of global annual LC maps from the 1990s to 2015 produced by the
+European Space Agency (ESA) Climate Change Initiative (CCI).
+
+This package can generate STAC files from netCDF files and that either link to
+the original netCDF files or to Cloud-Optimized GeoTiff (COG) files.
 
 ## STAC Examples
 
 - [Collection](examples/collection.json)
-- [Item](examples/item/item.json)
+- [Item](examples/item.json)
+- [Browse the example in human-readable form](https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/examples/collection.json)
 
 ## Installation
 
@@ -28,13 +42,41 @@ pip install stactools-esa-cci-lc
 
 ## Command-line Usage
 
-Description of the command line functions
+Use `stac esa-cci-lc --help` to see all subcommands and options.
+
+### Collection
+
+Create a collection:
 
 ```shell
-stac esa-cci-lc create-item source destination
+stac esa-cci-lc create-collection collection.json
 ```
 
-Use `stac esa-cci-lc --help` to see all subcommands and options.
+Get information about all options for collection creation:
+
+```shell
+stac esa-cci-lc create-collection --help
+```
+
+### Item
+
+Create an item with netCDF and COG assets:
+
+```shell
+stac esa-cci-lc create-item /path/to/source/file.nc item.json --collection collection.json
+```
+
+Create an item with only COG assets:
+
+```shell
+stac esa-cci-lc create-item /path/to/source/file.nc item.json --collection collection.json --nonetcdf TRUE
+```
+
+Get information about all options for item creation:
+
+```shell
+stac esa-cci-lc create-item --help
+```
 
 ## Contributing
 
