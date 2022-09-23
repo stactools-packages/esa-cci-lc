@@ -1,4 +1,4 @@
-from stactools.ephemeral import stac
+from stactools.esa_cci_lc import stac
 
 
 def test_create_collection() -> None:
