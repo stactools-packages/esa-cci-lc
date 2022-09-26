@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/stactools-packages/noaa-mrms-qpe/main/extension/schema.json#",
+  "title": "NOAA MRMS QPE extension",
+  "description": "STAC NOAA MRMS QPE Extension for STAC Items and STAC Collections.",
+  "oneOf": [
+    {
+      "$comment": "This is the schema for STAC Items.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/stac_extensions"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "properties"
+          ],
+          "properties": {
+            "type": {
+              "const": "Feature"
+            },
+            "properties": {
+              "type": "object",
+              "required": [
+                "esa_cci_lc:version"
+              ],
+              "properties": {
+                "esa_cci_lc:version": {
+                  "$ref": "#/definitions/version"
+                }
+              },
+              "patternProperties": {
+                "^(?!esa_cci_lc:)": {}
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "$comment": "This is the schema for STAC Collections.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/stac_extensions"
+        },
+        {
+          "required": [
+            "type",
+            "summaries"
+          ],
+          "properties": {
+            "type": {
+              "const": "Collection"
+            },
+            "summaries": {
+              "type": "object",
+              "required": [
+                "esa_cci_lc:version"
+              ],
+              "properties": {
+                "esa_cci_lc:version": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "$ref": "#/definitions/version"
+                  }
+                }
+              },
+              "patternProperties": {
+                "^(?!esa_cci_lc:)": {}
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "definitions": {
+    "stac_extensions": {
+      "type": "object",
+      "required": [
+        "stac_extensions"
+      ],
+      "properties": {
+        "stac_extensions": {
+          "type": "array",
+          "contains": {
+            "const": "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json"
+          }
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "enum": [
+        "2.1.1",
+        "2.0.7cds"
+      ]
+    }
+  }
+}

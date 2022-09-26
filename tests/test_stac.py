@@ -17,7 +17,6 @@ class StacTest(unittest.TestCase):
         # Validate
         collection.validate()
 
-
     def test_create_item(self) -> None:
         self.assertTrue(True)
         # Write tests for each for the creation of STAC Items

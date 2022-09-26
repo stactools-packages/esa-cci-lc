@@ -63,6 +63,7 @@
     }
   ],
   "stac_extensions": [
+    "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json",
     "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
     "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
   ],
@@ -113,26 +114,34 @@
     "CCI",
     "Land Cover",
     "LC",
+    "Classification",
     "netCDF",
     "COG"
   ],
   "providers": [
     {
       "name": "VITO",
-      "description": "Provides source data, e.g. PROBA-V.",
+      "description": "Provides the PROBA-V source data.",
       "roles": [
         "licensor"
       ],
       "url": "https://vito.be"
     },
     {
-      "name": "ESA",
-      "description": "The ESA Climate Change Initiative (CCI) lets produce the dataset.",
+      "name": "UCLouvain",
+      "description": "UCLouvain produces the dataset for the ESA Climate Change Initiative.",
       "roles": [
-        "producer",
+        "producer"
+      ],
+      "url": "https://uclouvain.be"
+    },
+    {
+      "name": "ESA Climate Change Initiative",
+      "description": "The ESA Climate Change Initiative (CCI) is leading the product creation.",
+      "roles": [
         "licensor"
       ],
-      "url": "https://esa.int"
+      "url": "http://esa-landcover-cci.org"
     },
     {
       "name": "Copernicus",
@@ -145,5 +154,12 @@
     }
   ],
   "summaries": {
+    "gsd": [
+      300
+    ],
+    "esa_cci_lc:version": [
+      "2.0.7cds",
+      "2.1.1"
+    ]
   }
 }

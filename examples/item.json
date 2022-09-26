@@ -3,7 +3,7 @@
   "stac_version": "1.0.0",
   "id": "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1",
   "properties": {
-    "esa-cci-lc:version": "2.1.1",
+    "esa_cci_lc:version": "2.1.1",
     "title": "Land Cover Map of 2020",
     "gsd": 300,
     "start_datetime": "2020-01-01T00:00:00Z",
@@ -92,8 +92,8 @@
         "bounds": {
           "type": "bounds",
           "values": [
-            null,
-            null
+            0,
+            1
           ]
         }
       },
@@ -210,6 +210,7 @@
     90.0
   ],
   "stac_extensions": [
+    "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json",
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/processing/v1.1.0/schema.json",
     "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"

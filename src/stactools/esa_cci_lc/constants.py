@@ -87,6 +87,7 @@ GEOMETRY = {
 }
 
 # Extensions
+ESA_CCI_LC_EXTENSION = "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json"  # noqa: E501
 CLASSIFICATION_EXTENSION = (
     "https://stac-extensions.github.io/classification/v1.0.0/schema.json"
 )

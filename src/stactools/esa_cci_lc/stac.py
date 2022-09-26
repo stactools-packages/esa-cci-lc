@@ -84,14 +84,12 @@ def create_collection(
         keywords.append("COG")
 
     summaries = Summaries(
-        {
-            #  todo
-            "gsd": [constants.GSD],
-        }
+        {"gsd": [constants.GSD], "esa_cci_lc:version": constants.VERSIONS}
     )
 
     collection = Collection(
         stac_extensions=[
+            constants.ESA_CCI_LC_EXTENSION,
             # constants.CLASSIFICATION_EXTENSION,
             # constants.DATACUBE_EXTENSION,
             # constants.PROCESSING_EXTENSION,
@@ -193,11 +191,12 @@ def create_item(
         end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
 
         properties = {
-            "esa-cci-lc:version": dataset.product_version,
+            "esa_cci_lc:version": dataset.product_version,
         }
 
         item = Item(
             stac_extensions=[
+                constants.ESA_CCI_LC_EXTENSION,
                 # constants.CLASSIFICATION_EXTENSION,
             ],
             id=id,

@@ -14,7 +14,7 @@
   - [processing](https://github.com/stac-extensions/processing/)
   - [proj](https://github.com/stac-extensions/projection/)
 - Extra fields:
-  - `esa-cci-lc:custom`: A custom attribute
+  - [See the ESA CCI LC extension for details](extension/README.md)
 
 A stactools package for ESA's Climate Change Initiative (CCI) Land Cover (LC)
 product.
