@@ -21,7 +21,7 @@ from pystac.extensions.item_assets import AssetDefinition, ItemAssetsExtension
 from pystac.extensions.projection import ProjectionExtension
 from pystac.extensions.scientific import ScientificExtension
 
-from . import cog, constants, netcdf
+from . import classes, cog, constants, netcdf
 
 logger = logging.getLogger(__name__)
 
@@ -83,14 +83,21 @@ def create_collection(
     if not nocog:
         keywords.append("COG")
 
+    classification = classes.to_stac()
     summaries = Summaries(
-        {"gsd": [constants.GSD], "esa_cci_lc:version": constants.VERSIONS}
+        {
+            "gsd": [constants.GSD],
+            "esa_cci_lc:version": constants.VERSIONS,
+            "classification:classes": classification,
+        },
+        # Up the maxcount for the classes, otherwise the classes will be omitted from output
+        maxcount=len(classification) + 1,
     )
 
     collection = Collection(
         stac_extensions=[
             constants.ESA_CCI_LC_EXTENSION,
-            # constants.CLASSIFICATION_EXTENSION,
+            constants.CLASSIFICATION_EXTENSION,
             # constants.DATACUBE_EXTENSION,
             # constants.PROCESSING_EXTENSION,
         ],
@@ -192,12 +199,13 @@ def create_item(
 
         properties = {
             "esa_cci_lc:version": dataset.product_version,
+            "classification:classes": classes.to_stac(),
         }
 
         item = Item(
             stac_extensions=[
                 constants.ESA_CCI_LC_EXTENSION,
-                # constants.CLASSIFICATION_EXTENSION,
+                constants.CLASSIFICATION_EXTENSION,
             ],
             id=id,
             properties=properties,
@@ -225,9 +233,10 @@ def create_item(
             if len(software) > 0:
                 item.properties["processing:software"] = software
             if len(dataset.source) > 0:
-                item.properties[
-                    "processing:lineage"
-                ] = f"Produced based on the following data sources: {dataset.source}"
+                lineage = (
+                    f"Produced based on the following data sources: {dataset.source}"
+                )
+                item.properties["processing:lineage"] = lineage
 
         # Add a assets to the item
         if not nocog:
