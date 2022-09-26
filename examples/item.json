@@ -224,14 +224,14 @@
         "color_hint": "FFF5D7"
       },
       {
-        "value": 200,
+        "value": 201,
         "name": "bare-a",
         "description": "Consolidated bare areas",
         "color_hint": "DCDCDC",
         "regional": true
       },
       {
-        "value": 200,
+        "value": 202,
         "name": "bare-b",
         "description": "Unconsolidated bare areas",
         "color_hint": "FFF5D7",
@@ -300,39 +300,79 @@
     }
   ],
   "assets": {
-    "cog": {
-      "href": "todo",
+    "lccs_class": {
+      "href": "lccs_class.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Processed Cloud-Optimized GeoTIFF file",
-      "created": "2022-09-26T14:21:18.313957Z",
+      "title": "Land cover class defined in LCCS",
+      "created": "2022-09-26T19:19:47.938221Z",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "processed_flag": {
+      "href": "processed_flag.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "LC map processed area flag",
+      "created": "2022-09-26T19:19:47.938259Z",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "current_pixel_state": {
+      "href": "current_pixel_state.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "LC pixel type mask",
+      "created": "2022-09-26T19:19:47.938281Z",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "observation_count": {
+      "href": "observation_count.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Number of valid observations",
+      "created": "2022-09-26T19:19:47.938304Z",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "change_count": {
+      "href": "change_count.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Number of class changes",
+      "created": "2022-09-26T19:19:47.938323Z",
       "roles": [
         "data",
         "cloud-optimized"
       ]
     },
     "netcdf": {
-      "href": "tests/data-files/C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc",
+      "href": "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc",
       "type": "application/netcdf",
       "title": "Original netCDF 4 file",
       "cube:dimensions": {
         "lat": {
           "type": "lat",
           "extent": [
-            -90,
-            90
+            -90.0,
+            90.0
           ]
         },
         "lon": {
           "type": "lon",
           "extent": [
-            -180,
-            180
+            -180.0,
+            180.0
           ]
         },
         "time": {
           "type": "time",
           "values": [
-            "2020-01-01"
+            18262.0
           ]
         },
         "bounds": {
@@ -386,14 +426,14 @@
             "lat",
             "lon"
           ],
-          "type": "auxiliary",
+          "type": "data",
           "description": "number of class changes"
         },
         "lat": {
           "dimensions": [
             "lat"
           ],
-          "type": "data",
+          "type": "auxiliary",
           "description": "latitude",
           "unit": "degrees_north",
           "axis": "Y"
@@ -402,7 +442,7 @@
           "dimensions": [
             "lon"
           ],
-          "type": "data",
+          "type": "auxiliary",
           "description": "longitude",
           "unit": "degrees_east",
           "axis": "X"
@@ -436,13 +476,25 @@
           "dimensions": [
             "time"
           ],
-          "type": "data",
+          "type": "auxiliary",
           "description": "time",
           "unit": "days since 1970-01-01 00:00:00",
           "axis": "T"
         }
       },
       "created": "2021-05-18T10:15:40Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        0.002777777777778,
+        0.0,
+        0.0,
+        -0.002777777777778,
+        -180.0,
+        90.0
+      ],
       "roles": [
         "data",
         "source"

@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional
 
 # import numpy as np
-from netCDF4 import Dataset
+from netCDF4 import Dataset, Variable
 from pystac.extensions.datacube import VariableType
 
 from . import constants
@@ -19,17 +19,19 @@ def to_cube_dimensions(dataset: Dataset) -> Dict[str, Any]:
     """
     cube_dims = {}
     for key, dim in dataset.dimensions.items():
-        stac_dim = {"type": dim.name, "extent": [None, None]}
-        # if not dim.isunlimited():
-        # dim_vars = [
-        #    var for var in dataset.variables.values() if dim.name in var.dimensions
-        # ]
-        # if len(dim_vars) == 1:
-        #    data = np.asarray(dim_vars).tolist()
-        #    stac_dim["extent"] = data[0]
-        # elif len(dim_vars) > 1:
-        #    flat = np.asarray(dim_vars).flatten().tolist()
-        #    stac_dim["extent"] = [min(flat), max(flat)]
+        stac_dim = {"type": dim.name}
+        if dim.name in dataset.variables:
+            # assume that the index variable has the same name as the dimension
+            index_var = dataset.variables[dim.name]
+            attrs = index_var.ncattrs()
+            if "valid_min" in attrs and "valid_max" in attrs:
+                min = index_var.getncattr("valid_min")
+                max = index_var.getncattr("valid_max")
+                stac_dim["extent"] = [min, max]
+            else:
+                stac_dim["values"] = index_var[...].tolist()
+        else:
+            stac_dim["values"] = list(range(0, dim.size))
 
         cube_dims[dim.name] = stac_dim
 
@@ -50,7 +52,7 @@ def to_cube_variables(dataset: Dataset) -> Dict[str, Any]:
     for key, var in dataset.variables.items():
         attrs = var.ncattrs()
 
-        if "standard_name" in attrs and len(var.dimensions) > 0:
+        if is_data_variable(var):
             type = VariableType.DATA
         else:
             type = VariableType.AUXILIARY
@@ -60,15 +62,12 @@ def to_cube_variables(dataset: Dataset) -> Dict[str, Any]:
             stac_var["description"] = var.getncattr("long_name")
 
         if "units" in attrs:
-            unit = var.getncattr("units")
-            if unit == "percent":
-                stac_var["unit"] = "%"
-            elif unit not in constants.IGNORED_UNITS:
-                stac_var["unit"] = unit
+            stac_var["unit"] = var.getncattr("units")
 
         # not defined in the datacube extension, but might be useful
         if "axis" in attrs:
             stac_var["axis"] = var.getncattr("axis")
+
         cube_vars[var.name] = stac_var
 
     return cube_vars
@@ -94,3 +93,11 @@ def create_asset(href: Optional[str] = None) -> Dict[str, Any]:
     if href is not None:
         asset["href"] = href
     return asset
+
+
+def is_data_variable(var: Variable) -> bool:
+    # if "lat" in var.dimensions and "lon" in var.dimensions and "time" in var.dimensions:
+    if var.name in constants.DATA_VARIABLES:
+        return True
+    else:
+        return False

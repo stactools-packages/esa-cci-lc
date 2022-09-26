@@ -107,8 +107,6 @@ EPSG_CODE = 4326
 DOI = "10.24381/cds.006f2c9a"
 
 # Assets
-COG_TITLE = "Processed Cloud-Optimized GeoTIFF file"
-COG_KEY = "cog"
 COG_MEDIA_TYPE = "image/tiff; application=geotiff; profile=cloud-optimized"
 COG_ROLES = ["data", "cloud-optimized"]
 
@@ -117,4 +115,10 @@ NETCDF_MEDIA_TYPE = "application/netcdf"
 NETCDF_ROLES = ["data", "source"]
 NETCDF_KEY = "netcdf"
 
-IGNORED_UNITS = [""]
+DATA_VARIABLES = [
+    "change_count",
+    "current_pixel_state",
+    "lccs_class",
+    "observation_count",
+    "processed_flag",
+]

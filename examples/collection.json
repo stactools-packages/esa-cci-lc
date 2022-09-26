@@ -70,8 +70,35 @@
   ],
   "sci:doi": "10.24381/cds.006f2c9a",
   "item_assets": {
-    "cog": {
-      "title": "Processed Cloud-Optimized GeoTIFF file",
+    "change_count": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "current_pixel_state": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "lccs_class": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "observation_count": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "processed_flag": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data",

@@ -1,6 +1,7 @@
 import logging
+import os
 import re
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Dict, Optional
 
 from dateutil.parser import isoparse
@@ -140,8 +141,9 @@ def create_collection(
 
     item_assets = {}
     if not nocog:
-        asset = cog.create_asset()
-        item_assets[constants.COG_KEY] = AssetDefinition(asset)
+        for var in constants.DATA_VARIABLES:
+            asset = cog.create_asset()
+            item_assets[var] = AssetDefinition(asset)
 
     if not nonetcdf:
         asset = netcdf.create_asset()
@@ -221,11 +223,8 @@ def create_item(
         common_item.start_datetime = start_datetime
         common_item.end_datetime = end_datetime
 
-        # It is a good idea to include proj attributes to optimize for libs like stac-vrt
         proj_attrs = ProjectionExtension.ext(item, add_if_missing=True)
         proj_attrs.epsg = constants.EPSG_CODE
-        # proj_attrs.shape = [1, 1]  # Raster shape
-        # proj_attrs.transform = [-180, 360, 0, 90, 0, 180]  # Raster GeoTransform
 
         software = parse_software_history(dataset.history)
         if len(software) > 0 or len(dataset.source) > 0:
@@ -240,22 +239,40 @@ def create_item(
 
         # Add a assets to the item
         if not nocog:
-            asset_dict = cog.create_asset("todo")  # todo
-            asset = Asset.from_dict(asset_dict)
-            common_asset = CommonMetadata(asset)
-            common_asset.created = datetime.now(tz=timezone.utc)
-            item.add_asset(constants.COG_KEY, asset)
+            dest_folder = os.path.dirname(asset_href)
+            for key, var in dataset.variables.items():
+                if not netcdf.is_data_variable(var):
+                    continue
+
+                asset = cog.create_from_var(asset_href, dest_folder, var)
+                item.add_asset(key, asset)
 
         if not nonetcdf:
-            # todo: replace with DataCube extension from PySTAC #16
+            # todo: replace with DataCube extension from PySTAC
             item.stac_extensions.append(constants.DATACUBE_EXTENSION)
             asset_dict = netcdf.create_asset(asset_href)
+
             asset_dict["cube:dimensions"] = netcdf.to_cube_dimensions(dataset)
             asset_dict["cube:variables"] = netcdf.to_cube_variables(dataset)
+
             asset = Asset.from_dict(asset_dict)
+            item.add_asset(constants.NETCDF_KEY, asset)
+
             common_asset = CommonMetadata(asset)
             common_asset.created = isoparse(dataset.creation_date)
-            item.add_asset(constants.NETCDF_KEY, asset)
+
+            proj_asset_attrs = ProjectionExtension.ext(asset, add_if_missing=True)
+            proj_asset_attrs.shape = [
+                dataset.dimensions["lon"].size,
+                dataset.dimensions["lat"].size,
+            ]
+            crs_var = dataset.variables["crs"]
+            if "i2m" in crs_var.ncattrs():
+                i2m = crs_var.getncattr("i2m")
+                values = i2m.split(",")
+                proj_asset_attrs.transform = []
+                for val in values:
+                    proj_asset_attrs.transform.append(float(val))
 
         return item
 
