@@ -1,12 +1,15 @@
 import logging
+import re
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Dict, Optional
 
 from dateutil.parser import isoparse
+from netCDF4 import Dataset
 from pystac import (
     Asset,
     CatalogType,
     Collection,
+    CommonMetadata,
     Extent,
     Item,
     MediaType,
@@ -73,6 +76,7 @@ def create_collection(
         "CCI",
         "Land Cover",
         "LC",
+        "Classification",
     ]
     if not nonetcdf:
         keywords.append("netCDF")
@@ -81,13 +85,16 @@ def create_collection(
 
     summaries = Summaries(
         {
-            "esa-cci-lc:example": [1, 2, 3],  # todo
+            #  todo
+            "gsd": [constants.GSD],
         }
     )
 
     collection = Collection(
         stac_extensions=[
-            #           constants.PROCESSING_EXTENSION,
+            # constants.CLASSIFICATION_EXTENSION,
+            # constants.DATACUBE_EXTENSION,
+            # constants.PROCESSING_EXTENSION,
         ],
         id=id,
         title=constants.TITLE,
@@ -127,11 +134,9 @@ def create_collection(
         )
 
     item_assets = {}
-
     if not nocog:
-        item_assets[constants.COG_KEY] = AssetDefinition(
-            cog.create_asset_metadata(constants.COG_TITLE)
-        )
+        asset = cog.create_asset()
+        item_assets[constants.COG_KEY] = AssetDefinition(asset)
 
     if not nonetcdf:
         asset = netcdf.create_asset()
@@ -166,57 +171,123 @@ def create_item(
         Item: STAC Item object
     """
 
-    properties = {
-        "title": "A dummy STAC Item",
-        "description": "Used for demonstration purposes",
-    }
+    with Dataset(asset_href, "r", format="NETCDF4") as dataset:
+        id = dataset.id
 
-    demo_geom = {
-        "type": "Polygon",
-        "coordinates": [[[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]]],
-    }
+        if dataset.product_version not in constants.VERSIONS:
+            versions = ",".join(constants.VERSIONS)
+            raise Exception(
+                f"Given product version ({dataset.product_version}) is not supported. "
+                f"Supports: {versions}"
+            )
 
-    # Time must be in UTC
-    demo_time = datetime.now(tz=timezone.utc)
+        # Times must be in UTC
+        start = dataset.time_coverage_start
+        end = dataset.time_coverage_end
+        if start[0:4] != end[0:4]:
+            raise Exception(
+                "Expected a yearly land cover, but got different start and end years"
+            )
+        year = start[0:4]
+        start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")
+        end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
 
-    item = Item(
-        id="my-item-id",
-        properties=properties,
-        geometry=demo_geom,
-        bbox=[-180, 90, 180, -90],
-        datetime=demo_time,
-        stac_extensions=[],
-        collection=collection,
-    )
+        properties = {
+            "esa-cci-lc:version": dataset.product_version,
+        }
 
-    # It is a good idea to include proj attributes to optimize for libs like stac-vrt
-    proj_attrs = ProjectionExtension.ext(item, add_if_missing=True)
-    proj_attrs.epsg = 4326
-    proj_attrs.bbox = [-180, 90, 180, -90]
-    proj_attrs.shape = [1, 1]  # Raster shape
-    proj_attrs.transform = [-180, 360, 0, 90, 0, 180]  # Raster GeoTransform
-
-    # Add a assets to the item
-    if not nocog:
-        item.add_asset(
-            constants.COG_KEY,
-            Asset(
-                href=asset_href,
-                media_type=constants.COG_MEDIA_TYPE,
-                roles=constants.COG_ROLES,
-                title=constants.COG_TITLE,
-            ),
+        item = Item(
+            stac_extensions=[
+                # constants.CLASSIFICATION_EXTENSION,
+            ],
+            id=id,
+            properties=properties,
+            geometry=constants.GEOMETRY,
+            bbox=constants.BBOX,
+            datetime=center_datetime(start_datetime, end_datetime),
+            collection=collection,
         )
 
-    if not nonetcdf:
-        item.add_asset(
-            constants.NETCDF_KEY,
-            Asset(
-                href=asset_href,
-                media_type=constants.NETCDF_MEDIA_TYPE,
-                roles=constants.NETCDF_ROLES,
-                title=constants.NETCDF_TITLE,
-            ),
-        )
+        common_item = CommonMetadata(item)
+        common_item.title = f"Land Cover Map of {year}"
+        common_item.gsd = constants.GSD
+        common_item.start_datetime = start_datetime
+        common_item.end_datetime = end_datetime
 
-    return item
+        # It is a good idea to include proj attributes to optimize for libs like stac-vrt
+        proj_attrs = ProjectionExtension.ext(item, add_if_missing=True)
+        proj_attrs.epsg = constants.EPSG_CODE
+        # proj_attrs.shape = [1, 1]  # Raster shape
+        # proj_attrs.transform = [-180, 360, 0, 90, 0, 180]  # Raster GeoTransform
+
+        software = parse_software_history(dataset.history)
+        if len(software) > 0 or len(dataset.source) > 0:
+            item.stac_extensions.append(constants.PROCESSING_EXTENSION)
+            if len(software) > 0:
+                item.properties["processing:software"] = software
+            if len(dataset.source) > 0:
+                item.properties[
+                    "processing:lineage"
+                ] = f"Produced based on the following data sources: {dataset.source}"
+
+        # Add a assets to the item
+        if not nocog:
+            asset_dict = cog.create_asset("todo")  # todo
+            asset = Asset.from_dict(asset_dict)
+            common_asset = CommonMetadata(asset)
+            common_asset.created = datetime.now(tz=timezone.utc)
+            item.add_asset(constants.COG_KEY, asset)
+
+        if not nonetcdf:
+            # todo: replace with DataCube extension from PySTAC #16
+            item.stac_extensions.append(constants.DATACUBE_EXTENSION)
+            asset_dict = netcdf.create_asset(asset_href)
+            asset_dict["cube:dimensions"] = netcdf.to_cube_dimensions(dataset)
+            asset_dict["cube:variables"] = netcdf.to_cube_variables(dataset)
+            asset = Asset.from_dict(asset_dict)
+            common_asset = CommonMetadata(asset)
+            common_asset.created = isoparse(dataset.creation_date)
+            item.add_asset(constants.NETCDF_KEY, asset)
+
+        return item
+
+
+def parse_software_history(history: str) -> Dict[str, str]:
+    """
+    Parses a comma delimited string with software and version number into
+    a dict compliant to `processing:software`.
+
+    Args:
+        history (str): string with software and version numbers
+
+    Returns:
+        Dict[str, str]
+    """
+    software: Dict[str, str] = {}
+    tools = re.findall(r"([\w-]+)-(\d+[.,]\d+)", history)
+    for tool in tools:
+        name = tool[0].strip()
+        version = tool[1].strip()
+        if name in software:
+            # solve conflicts
+            software[f"{name}(1)"] = software[name]
+            software[f"{name}(2)"] = version
+            del software[name]
+        else:
+            software[name] = version
+
+    return software
+
+
+def center_datetime(start: datetime, end: datetime) -> datetime:
+    """
+    Takes the start and end datetime and computes the central datetime.
+
+    Args:
+        start (datetime): ISO 8601 compliant date-time
+        end (datetime): ISO 8601 compliant date-time
+
+    Returns:
+        datetime: ISO 8601 compliant date-time
+    """
+    return start + (end - start) / 2

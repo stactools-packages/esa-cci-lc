@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 
-import numpy as np
+# import numpy as np
 from netCDF4 import Dataset
 from pystac.extensions.datacube import VariableType
 
@@ -20,16 +20,16 @@ def to_cube_dimensions(dataset: Dataset) -> Dict[str, Any]:
     cube_dims = {}
     for key, dim in dataset.dimensions.items():
         stac_dim = {"type": dim.name, "extent": [None, None]}
-        if not dim.isunlimited():
-            dim_vars = [
-                var for var in dataset.variables.values() if dim.name in var.dimensions
-            ]
-            if len(dim_vars) == 1:
-                data = np.asarray(dim_vars).tolist()
-                stac_dim["extent"] = data[0]
-            elif len(dim_vars) > 1:
-                flat = np.asarray(dim_vars).flatten().tolist()
-                stac_dim["extent"] = [min(flat), max(flat)]
+        # if not dim.isunlimited():
+        # dim_vars = [
+        #    var for var in dataset.variables.values() if dim.name in var.dimensions
+        # ]
+        # if len(dim_vars) == 1:
+        #    data = np.asarray(dim_vars).tolist()
+        #    stac_dim["extent"] = data[0]
+        # elif len(dim_vars) > 1:
+        #    flat = np.asarray(dim_vars).flatten().tolist()
+        #    stac_dim["extent"] = [min(flat), max(flat)]
 
         cube_dims[dim.name] = stac_dim
 

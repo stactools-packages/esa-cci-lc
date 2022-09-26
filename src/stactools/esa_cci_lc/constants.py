@@ -20,14 +20,20 @@ PROVIDERS = [
     Provider(
         name="VITO",
         roles=[ProviderRole.LICENSOR],
-        description="Provides source data, e.g. PROBA-V.",
+        description="Provides the PROBA-V source data.",
         url="https://vito.be",
     ),
     Provider(
-        name="ESA",
-        roles=[ProviderRole.PRODUCER, ProviderRole.LICENSOR],
-        description="The ESA Climate Change Initiative (CCI) lets produce the dataset.",
-        url="https://esa.int",
+        name="UCLouvain",
+        roles=[ProviderRole.PRODUCER],
+        description="UCLouvain produces the dataset for the ESA Climate Change Initiative.",
+        url="https://uclouvain.be",
+    ),
+    Provider(
+        name="ESA Climate Change Initiative",
+        roles=[ProviderRole.LICENSOR],
+        description="The ESA Climate Change Initiative (CCI) is leading the product creation.",
+        url="http://esa-landcover-cci.org",
     ),
     Provider(
         name="Copernicus",
@@ -74,9 +80,27 @@ LINK_USER_GUIDE_V21 = Link(
     rel="about",
 )
 
+# Item
+GEOMETRY = {
+    "type": "Polygon",
+    "coordinates": [[[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]]],
+}
+
 # Extensions
-PROCESSING_EXTENSION = "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
+CLASSIFICATION_EXTENSION = (
+    "https://stac-extensions.github.io/classification/v1.0.0/schema.json"
+)
 DATACUBE_EXTENSION = "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"
+PROCESSING_EXTENSION = "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
+
+# Common
+GSD = 300
+V1 = "2.0.7cds"
+V2 = "2.1.1"
+VERSIONS = [V1, V2]
+
+# Projection
+EPSG_CODE = 4326
 
 # Scientific
 DOI = "10.24381/cds.006f2c9a"

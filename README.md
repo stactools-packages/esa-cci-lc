@@ -9,6 +9,9 @@
 - Dataset homepage:
   - <https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-land-cover>
 - STAC extensions used:
+  - [classification](https://github.com/stac-extensions/classification/)
+  - [datacube](https://github.com/stac-extensions/datacube/)
+  - [processing](https://github.com/stac-extensions/processing/)
   - [proj](https://github.com/stac-extensions/projection/)
 - Extra fields:
   - `esa-cci-lc:custom`: A custom attribute

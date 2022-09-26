@@ -6,8 +6,7 @@ from . import constants
 logger = logging.getLogger(__name__)
 
 
-def create_asset_metadata(
-    title: str,
+def create_asset(
     href: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
@@ -24,7 +23,7 @@ def create_asset_metadata(
         dict: Basic Asset object
     """
     asset: Dict[str, Any] = {
-        "title": title,
+        "title": constants.COG_TITLE,
         "type": constants.COG_MEDIA_TYPE,
         "roles": constants.COG_ROLES,
     }
