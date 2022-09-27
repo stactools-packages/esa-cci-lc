@@ -8,12 +8,13 @@ from typing import Any, Dict, Optional
 from netCDF4 import Variable
 from pystac import Asset, CommonMetadata
 
-from . import constants
+from . import classes, constants
 
 logger = logging.getLogger(__name__)
 
 
 def create_asset(
+    key: str,
     href: Optional[str] = None,
     title: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -34,10 +35,16 @@ def create_asset(
         "type": constants.COG_MEDIA_TYPE,
         "roles": constants.COG_ROLES,
     }
-    if title is not None:
-        asset["title"] = title
+
     if href is not None:
         asset["href"] = href
+    if title is not None:
+        asset["title"] = title
+    if key in constants.COG_DESCRIPTIONS:
+        asset["description"] = constants.COG_DESCRIPTIONS[key]
+    if key in constants.TABLES:
+        asset["classification:classes"] = classes.to_stac(constants.TABLES[key])
+
     return asset
 
 
@@ -53,7 +60,8 @@ def create_from_var(source: str, dest: str, var: Variable) -> Asset:
         title = title[0].upper() + title[1:]
     else:
         title = None
-    asset_dict = create_asset(dest_path, title)
+
+    asset_dict = create_asset(var.name, dest_path, title)
     asset = Asset.from_dict(asset_dict)
 
     common_asset = CommonMetadata(asset)

@@ -142,7 +142,7 @@ def create_collection(
     item_assets = {}
     if not nocog:
         for var in constants.DATA_VARIABLES:
-            asset = cog.create_asset()
+            asset = cog.create_asset(var)
             item_assets[var] = AssetDefinition(asset)
 
     if not nonetcdf:
@@ -199,10 +199,9 @@ def create_item(
         start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")
         end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
 
-        properties = {
-            "esa_cci_lc:version": dataset.product_version,
-            "classification:classes": classes.to_stac(),
-        }
+        properties = {"esa_cci_lc:version": dataset.product_version}
+        if nocog:
+            properties["classification:classes"] = classes.to_stac()
 
         item = Item(
             stac_extensions=[

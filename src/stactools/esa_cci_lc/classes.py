@@ -2,8 +2,9 @@
 # flake8: noqa
 from typing import Any, Dict, List
 
+# Value, RGB, Name, Description, Regional (def: False), Nodata (def: False)
+
 TABLE: List[List[Any]] = [
-    # Value, RGB, Name, Description, Regional (def: False), Nodata (def: False)
     [  0, [  0,  0,  0], "no-data", "No Data", False, True],
     [ 10, [255,255,100], "cropland-1", "Cropland, rainfed"],
     [ 11, [255,255,100], "cropland-1a", "Cropland, rainfed, herbaceous cover", True],
@@ -44,25 +45,41 @@ TABLE: List[List[Any]] = [
     [220, [255,255,255], "snow-ice", "Permanent snow and ice"],
 ]
 
-def to_stac(incldue_regional: bool = True) -> List[Dict[str, Any]]:
+PROCESSED_FLAG_TABLE = [
+# [-1, None, "no-data", "No Data", False, True],
+  [ 0, None, "not_processed", "Not processed"],
+  [ 1, None, "processed", "Processed"],
+]
+
+CURRENT_PIXEL_STATE_TABLE = [
+# [-1, None, "no-data", "No Data", False, True],
+  [ 1, None, "land", "Clear land"],
+  [ 2, None, "water", "Clear water"],
+  [ 3, None, "snow", "Clear snow / ice"],
+  [ 4, None, "cloud", "Cloud"],
+  [ 5, None, "cloud_shadow", "Cloud_shadow"],
+  [ 6, None, "filled", "Filled"],
+]
+
+def to_stac(data: List[List[Any]] = TABLE, incldue_regional: bool = True) -> List[Dict[str, Any]]:
   stac_classes: List[Dict[str, Any]] = []
-  for cls in TABLE:
+  for cls in data:
     regional = False
     if len(cls) >= 5 and cls[4] is True:
       regional = True
       if not incldue_regional:
         continue
 
-    rgb: List[int] = cls[1]
-    r,g,b = rgb
-    hex = "{:02x}{:02x}{:02x}".format(r,g,b).upper()
-
     stac_class: Dict[str, Any] = {
       "value": cls[0],
       "name": cls[2],
       "description": cls[3],
-      "color_hint": hex,
     }
+
+    if cls[1] is not None:
+      rgb: List[int] = cls[1]
+      r,g,b = rgb
+      stac_class["color_hint"] = "{:02x}{:02x}{:02x}".format(r,g,b).upper()
 
     if regional:
       stac_class["regional"] = True

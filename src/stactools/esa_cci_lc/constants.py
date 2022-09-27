@@ -1,5 +1,7 @@
 from pystac import Link, Provider, ProviderRole
 
+from . import classes
+
 # Collection
 TITLE = "ESA Climate Change Initiative Land Cover"
 DESCRIPTION = (
@@ -107,6 +109,26 @@ EPSG_CODE = 4326
 DOI = "10.24381/cds.006f2c9a"
 
 # Assets
+COG_DESCRIPTIONS = {
+    "change_count": (
+        "Number of years where land cover class changes have occurred, since 1992. "
+        "0 for stable, greater than 0 for changes."
+    ),
+    "current_pixel_state": (
+        "Pixel identification from satellite surface reflectance observations, "
+        "mainly distinguishing between land, water, and snow/ice."
+    ),
+    "lccs_class": (
+        "Land cover class per pixel, defined using the Land Cover Classification System "
+        "developed by the United Nations Food and Agriculture Organization."
+    ),
+    "observation_count": (
+        "Number of valid satellite observations that have contributed to each "
+        "pixel's classification."
+    ),
+    "processed_flag": "Flag to mark areas that could not be classified.",
+}
+
 COG_MEDIA_TYPE = "image/tiff; application=geotiff; profile=cloud-optimized"
 COG_ROLES = ["data", "cloud-optimized"]
 
@@ -115,6 +137,11 @@ NETCDF_MEDIA_TYPE = "application/netcdf"
 NETCDF_ROLES = ["data", "source"]
 NETCDF_KEY = "netcdf"
 
+TABLES = {
+    "current_pixel_state": classes.CURRENT_PIXEL_STATE_TABLE,
+    "processed_flag": classes.PROCESSED_FLAG_TABLE,
+    "lccs_class": classes.TABLE,
+}
 DATA_VARIABLES = [
     "change_count",
     "current_pixel_state",
