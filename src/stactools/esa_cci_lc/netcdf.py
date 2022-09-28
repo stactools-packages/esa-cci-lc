@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 # import numpy as np
 from netCDF4 import Dataset, Variable
@@ -101,3 +101,16 @@ def is_data_variable(var: Variable) -> bool:
         return True
     else:
         return False
+
+
+def parse_transform(dataset: Dataset) -> Optional[List[float]]:
+    crs_var = dataset.variables["crs"]
+    if "i2m" in crs_var.ncattrs():
+        i2m = crs_var.getncattr("i2m")
+        values = i2m.split(",")
+        transform = []
+        for val in values:
+            transform.append(float(val))
+        return transform
+    else:
+        return None

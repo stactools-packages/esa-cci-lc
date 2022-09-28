@@ -265,13 +265,9 @@ def create_item(
                 dataset.dimensions["lon"].size,
                 dataset.dimensions["lat"].size,
             ]
-            crs_var = dataset.variables["crs"]
-            if "i2m" in crs_var.ncattrs():
-                i2m = crs_var.getncattr("i2m")
-                values = i2m.split(",")
-                proj_asset_attrs.transform = []
-                for val in values:
-                    proj_asset_attrs.transform.append(float(val))
+            transform = netcdf.parse_transform(dataset)
+            if transform is not None:
+                proj_asset_attrs.transform = transform
 
         return item
 
