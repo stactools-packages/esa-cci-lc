@@ -33,7 +33,9 @@ def create_asset(
     """
     asset: Dict[str, Any] = {
         "type": constants.COG_MEDIA_TYPE,
-        "roles": constants.COG_ROLES,
+        "roles": constants.COG_ROLES_DATA
+        if key == "lcss_class"
+        else constants.COG_ROLES_QUALITY,
     }
 
     if href is not None:

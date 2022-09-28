@@ -22,14 +22,23 @@ PROVIDERS = [
     Provider(
         name="VITO",
         roles=[ProviderRole.LICENSOR],
-        description="Provides the PROBA-V source data.",
+        description="Provides the PROBA-V source data (for v2.0).",
         url="https://vito.be",
     ),
     Provider(
         name="UCLouvain",
         roles=[ProviderRole.PRODUCER],
-        description="UCLouvain produces the dataset for the ESA Climate Change Initiative.",
+        description="UCLouvain produces the dataset (v2.1) for the ESA Climate Change Initiative.",
         url="https://uclouvain.be",
+    ),
+    Provider(
+        name="Brockmann Consult",
+        roles=[ProviderRole.PROCESSOR],
+        description=(
+            "Brockmann Consult is responsible for the required pre-processing "
+            "and the distribution of the dataset (v2.1)."
+        ),
+        url="https://brockmann-consult.de",
     ),
     Provider(
         name="ESA Climate Change Initiative",
@@ -130,11 +139,12 @@ COG_DESCRIPTIONS = {
 }
 
 COG_MEDIA_TYPE = "image/tiff; application=geotiff; profile=cloud-optimized"
-COG_ROLES = ["data", "cloud-optimized"]
+COG_ROLES_DATA = ["data", "cloud-optimized"]
+COG_ROLES_QUALITY = ["quality", "cloud-optimized"]
 
 NETCDF_TITLE = "Original netCDF 4 file"
 NETCDF_MEDIA_TYPE = "application/netcdf"
-NETCDF_ROLES = ["data", "source"]
+NETCDF_ROLES = ["data", "quality", "source"]
 NETCDF_KEY = "netcdf"
 
 TABLES = {

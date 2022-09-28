@@ -307,7 +307,7 @@
       ],
       "created": "2022-09-27T13:32:25.862366Z",
       "roles": [
-        "data",
+        "quality",
         "cloud-optimized"
       ]
     },
@@ -330,7 +330,7 @@
       ],
       "created": "2022-09-27T13:32:25.862426Z",
       "roles": [
-        "data",
+        "quality",
         "cloud-optimized"
       ]
     },
@@ -373,7 +373,7 @@
       ],
       "created": "2022-09-27T13:32:25.862460Z",
       "roles": [
-        "data",
+        "quality",
         "cloud-optimized"
       ]
     },
@@ -384,7 +384,7 @@
       "description": "Number of valid satellite observations that have contributed to each pixel's classification.",
       "created": "2022-09-27T13:32:25.862485Z",
       "roles": [
-        "data",
+        "quality",
         "cloud-optimized"
       ]
     },
@@ -395,7 +395,7 @@
       "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
       "created": "2022-09-27T13:32:25.862509Z",
       "roles": [
-        "data",
+        "quality",
         "cloud-optimized"
       ]
     },
@@ -546,6 +546,7 @@
       ],
       "roles": [
         "data",
+        "quality",
         "source"
       ]
     }
