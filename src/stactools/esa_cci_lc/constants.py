@@ -133,7 +133,8 @@ COG_DESCRIPTIONS = {
     ),
     "observation_count": (
         "Number of valid satellite observations that have contributed to each "
-        "pixel's classification."
+        "pixel's classification.\n\n"
+        "**Note:** The COG doesn't contain overviews!"
     ),
     "processed_flag": "Flag to mark areas that could not be classified.",
 }

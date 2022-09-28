@@ -1,11 +1,14 @@
 import logging
 import os
+import time
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
-# import rioxarray  # noqa: F401
-# import xarray
+import rasterio
+import rioxarray  # noqa: F401
+import xarray
 from netCDF4 import Variable
+from osgeo import gdal
 from pystac import Asset, CommonMetadata
 
 from . import classes, constants
@@ -50,12 +53,58 @@ def create_asset(
     return asset
 
 
-# todo
 def create_from_var(source: str, dest: str, var: Variable) -> Asset:
     dest_path = os.path.join(dest, f"{var.name}.tif")
-    # xds = xarray.open_dataset(source, cache=False)
-    # todo: this is incredibly slow
-    # xds[var.name].rio.to_raster(dest_path, driver="COG", windowed=True)
+
+    t1 = time.time()
+    logger.info(f"Open {source}")
+    xds = xarray.open_dataset(source)
+
+    t2 = time.time() - t1
+    temp_path = dest_path + "f"
+    logger.info(f"Write GeoTiff {temp_path} - elapsed: {t2}")
+    xds[var.name].rio.to_raster(
+        temp_path,
+        windowed=True,
+        compress="PACKBITS",
+        bigtiff=True,
+        tiled=True,
+        blockxsize=2048,
+        blockysize=2048,  # closest to the 2025 tiling in the netcdf
+    )
+
+    overviews = "AUTO"
+    if var.name != "observation_count":
+        t3 = time.time() - t1
+        logger.info(f"Generate overviews {temp_path} - elapsed: {t3}")
+        OVERVIEW_LEVELS = [2, 4, 8, 16, 32, 64, 128, 256]
+        with rasterio.open(temp_path, "r+") as dst:
+            dst.build_overviews(OVERVIEW_LEVELS, rasterio.enums.Resampling.average)
+            dst.update_tags(ns="rio_overview", resampling="average")
+            overviews = "FORCE_USE_EXISTING"
+    else:
+        logger.info(f"SKIPPED Overviews {temp_path}")
+        overviews = "NONE"
+
+    t4 = time.time() - t1
+    logger.info(f"Convert to COG {dest_path} - elapsed: {t4}")
+    src = gdal.Open(temp_path)
+    src = gdal.Translate(
+        dest_path,
+        src,
+        format="COG",
+        creationOptions=[
+            "COMPRESS=DEFLATE",
+            "LEVEL=9",
+            "NUM_THREADS=ALL_CPUS",
+            "PREDICTOR=YES",
+            f"OVERVIEWS={overviews}",
+        ],
+    )
+    src = None
+
+    t5 = time.time() - t1
+    logger.info(f"Finished {dest_path} - elapsed: {t5}")
 
     title = var.getncattr("long_name")
     if isinstance(title, str) and len(title) > 0:
