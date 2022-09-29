@@ -14,7 +14,13 @@
       "rel": "item",
       "href": "./item.json",
       "type": "application/geo+json",
-      "title": "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1"
+      "title": "Land Cover Map of 2020"
+    },
+    {
+      "rel": "item",
+      "href": "./item2.json",
+      "type": "application/geo+json",
+      "title": "Land Cover Map of 1992"
     },
     {
       "rel": "license",
@@ -121,7 +127,7 @@
     "lccs_class": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
-        "quality",
+        "data",
         "cloud-optimized"
       ],
       "description": "Land cover class per pixel, defined using the Land Cover Classification System developed by the United Nations Food and Agriculture Organization.",

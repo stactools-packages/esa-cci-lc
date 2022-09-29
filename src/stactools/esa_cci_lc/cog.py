@@ -2,7 +2,7 @@ import logging
 import os
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import rasterio
 import rioxarray  # noqa: F401
@@ -37,7 +37,7 @@ def create_asset(
     asset: Dict[str, Any] = {
         "type": constants.COG_MEDIA_TYPE,
         "roles": constants.COG_ROLES_DATA
-        if key == "lcss_class"
+        if key == "lccs_class"
         else constants.COG_ROLES_QUALITY,
     }
 
@@ -89,6 +89,8 @@ def create_from_var(source: str, dest: str, var: Variable) -> Asset:
     t4 = time.time() - t1
     logger.info(f"Convert to COG {dest_path} - elapsed: {t4}")
     src = gdal.Open(temp_path)
+    if var.name == "lccs_class":
+        add_color_map(src, classes.TABLE)
     src = gdal.Translate(
         dest_path,
         src,
@@ -119,3 +121,19 @@ def create_from_var(source: str, dest: str, var: Variable) -> Asset:
     common_asset.created = datetime.now(tz=timezone.utc)
 
     return asset
+
+
+def add_color_map(file: Any, table: List[List[Any]]) -> None:
+    colors = gdal.ColorTable()
+    has_entry = False
+    for row in table:
+        if row[1] is None:
+            continue
+
+        colors.SetColorEntry(row[0], tuple(row[1]))
+        has_entry = True
+
+    if has_entry:
+        band = file.GetRasterBand(1)
+        band.SetRasterColorTable(colors)
+        band.SetRasterColorInterpretation(gdal.GCI_PaletteIndex)

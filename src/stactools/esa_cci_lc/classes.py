@@ -1,6 +1,6 @@
 # fmt: off
 # flake8: noqa
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 # Value, RGB, Name, Description, Regional (def: False), Nodata (def: False)
 
@@ -45,13 +45,13 @@ TABLE: List[List[Any]] = [
     [220, [255,255,255], "snow-ice", "Permanent snow and ice"],
 ]
 
-PROCESSED_FLAG_TABLE = [
+PROCESSED_FLAG_TABLE: List[List[Any]] = [
 # [-1, None, "no-data", "No Data", False, True],
   [ 0, None, "not_processed", "Not processed"],
   [ 1, None, "processed", "Processed"],
 ]
 
-CURRENT_PIXEL_STATE_TABLE = [
+CURRENT_PIXEL_STATE_TABLE: List[List[Any]] = [
 # [-1, None, "no-data", "No Data", False, True],
   [ 1, None, "land", "Clear land"],
   [ 2, None, "water", "Clear water"],
