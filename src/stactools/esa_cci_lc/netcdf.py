@@ -105,6 +105,7 @@ def is_data_variable(var: Variable) -> bool:
 
 def parse_transform(dataset: Dataset) -> Optional[List[float]]:
     crs_var = dataset.variables["crs"]
+    # todo: Verify this is really a valid transform, the docs don't have details
     if "i2m" in crs_var.ncattrs():
         i2m = crs_var.getncattr("i2m")
         values = i2m.split(",")

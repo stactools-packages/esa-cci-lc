@@ -5,11 +5,14 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 import rasterio
+import rasterio.crs
 import rioxarray  # noqa: F401
 import xarray
-from netCDF4 import Variable
+from netCDF4 import Dataset, Variable
 from osgeo import gdal
 from pystac import Asset, CommonMetadata
+from pystac.extensions.projection import ProjectionExtension
+from rasterio.enums import Resampling
 
 from . import classes, constants
 
@@ -53,7 +56,7 @@ def create_asset(
     return asset
 
 
-def create_from_var(source: str, dest: str, var: Variable) -> Asset:
+def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> Asset:
     dest_path = os.path.join(dest, f"{var.name}.tif")
 
     t1 = time.time()
@@ -79,8 +82,17 @@ def create_from_var(source: str, dest: str, var: Variable) -> Asset:
         logger.info(f"Generate overviews {temp_path} - elapsed: {t3}")
         OVERVIEW_LEVELS = [2, 4, 8, 16, 32, 64, 128, 256]
         with rasterio.open(temp_path, "r+") as dst:
-            dst.build_overviews(OVERVIEW_LEVELS, rasterio.enums.Resampling.average)
-            dst.update_tags(ns="rio_overview", resampling="average")
+            # Add missing CRS
+            crs_var = dataset.variables["crs"]
+            if "wkt" in crs_var.ncattrs():
+                dst.crs = rasterio.crs.CRS.from_wkt(crs_var.getncattr("wkt"))
+            # by default average is good for the imagery with the counts, but average
+            # leads to black artifacts in the land cover imagery so use nearest instead
+            resampling = Resampling.average
+            if var.name == "lccs_class":
+                resampling = Resampling.nearest
+            dst.build_overviews(OVERVIEW_LEVELS, resampling)
+            dst.update_tags(ns="rio_overview", resampling=resampling.name)
             overviews = "FORCE_USE_EXISTING"
     else:
         logger.info(f"SKIPPED Overviews {temp_path}")
@@ -103,7 +115,6 @@ def create_from_var(source: str, dest: str, var: Variable) -> Asset:
             f"OVERVIEWS={overviews}",
         ],
     )
-    src = None
 
     t5 = time.time() - t1
     logger.info(f"Finished {dest_path} - elapsed: {t5}")
@@ -117,8 +128,16 @@ def create_from_var(source: str, dest: str, var: Variable) -> Asset:
     asset_dict = create_asset(var.name, dest_path, title)
     asset = Asset.from_dict(asset_dict)
 
+    # Creation time
     common_asset = CommonMetadata(asset)
     common_asset.created = datetime.now(tz=timezone.utc)
+
+    # Projection details
+    proj_asset_attrs = ProjectionExtension.ext(asset)
+    proj_asset_attrs.shape = [src.RasterXSize, src.RasterYSize]
+
+    # Close file handler for GDAL
+    src = None
 
     return asset
 

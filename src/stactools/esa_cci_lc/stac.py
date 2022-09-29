@@ -243,7 +243,7 @@ def create_item(
                 if not netcdf.is_data_variable(var):
                     continue
 
-                asset = cog.create_from_var(asset_href, dest_folder, var)
+                asset = cog.create_from_var(asset_href, dest_folder, dataset, var)
                 item.add_asset(key, asset)
 
         if not nonetcdf:
