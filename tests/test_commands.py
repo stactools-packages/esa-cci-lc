@@ -10,22 +10,7 @@ from stactools.testing.cli_test import CliTestCase
 
 from stactools.esa_cci_lc.commands import create_esaccilc_command
 
-SRC_FOLDER = "./tests/data-files/"
-
-TEST_FILES = [
-    "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1",
-    "C3S-LC-L4-LCCS-Map-300m-P1Y-2016-v2.1.1",
-    "ESACCI-LC-L4-LCCS-Map-300m-P1Y-2015-v2.0.7cds",
-    "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds",
-]
-
-COG_KEYS = [
-    "change_count",
-    "current_pixel_state",
-    "lccs_class",
-    "observation_count",
-    "processed_flag",
-]
+from . import constants
 
 
 class CommandsTest(CliTestCase):
@@ -34,7 +19,7 @@ class CommandsTest(CliTestCase):
 
     def test_create_collection(self) -> None:
         with TemporaryDirectory() as tmp_dir:
-            src_file = os.path.join(SRC_FOLDER, "collection.json")
+            src_file = os.path.join(constants.SRC_FOLDER, "collection.json")
             destination = os.path.join(tmp_dir, "collection.json")
 
             result = self.run_command(
@@ -68,18 +53,22 @@ class CommandsTest(CliTestCase):
             self.assertEqual(diff, {})
 
     def test_create_item(self, withcog: bool = False) -> None:
-        for id in TEST_FILES:
+        for id in constants.TEST_FILES:
             with self.subTest(id=id):
                 with TemporaryDirectory() as tmp_dir:
                     src_data_filename = f"{id}.nc"
                     stac_filename = f"{id}.json"
 
-                    src_collection = os.path.join(SRC_FOLDER, "collection.json")
-                    src_data_file = os.path.join(SRC_FOLDER, src_data_filename)
+                    src_collection = os.path.join(
+                        constants.SRC_FOLDER, "collection.json"
+                    )
+                    src_data_file = os.path.join(
+                        constants.SRC_FOLDER, src_data_filename
+                    )
                     dest_data_file = os.path.join(tmp_dir, src_data_filename)
                     shutil.copyfile(src_data_file, dest_data_file)
 
-                    src_stac = os.path.join(SRC_FOLDER, stac_filename)
+                    src_stac = os.path.join(constants.SRC_FOLDER, stac_filename)
                     dest_stac = os.path.join(tmp_dir, stac_filename)
 
                     cmd = (
@@ -110,7 +99,7 @@ class CommandsTest(CliTestCase):
                     if withcog:
                         del truth_item["properties"]["classification:classes"]
                     else:
-                        for key in COG_KEYS:
+                        for key in constants.DATA_VARIABLES:
                             del truth_item["assets"][key]
 
                     diff = DeepDiff(
