@@ -1,5 +1,6 @@
 import logging
 import os
+import tempfile
 import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
@@ -63,61 +64,62 @@ def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> 
     logger.info(f"Open {source}")
     xds = xarray.open_dataset(source)
 
-    t2 = time.time() - t1
-    temp_path = dest_path + "f"
-    logger.info(f"Write GeoTiff {temp_path} - elapsed: {t2}")
-    xds[var.name].rio.to_raster(
-        temp_path,
-        windowed=True,
-        compress="PACKBITS",
-        bigtiff=True,
-        tiled=True,
-        blockxsize=2048,
-        blockysize=2048,  # closest to the 2025 tiling in the netcdf
-    )
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        t2 = time.time() - t1
+        temp_path = os.path.join(tmpdirname, os.path.basename(dest_path))
+        logger.info(f"Write GeoTiff {temp_path} - elapsed: {t2}")
+        xds[var.name].rio.to_raster(
+            temp_path,
+            windowed=True,
+            compress="PACKBITS",
+            bigtiff=True,
+            tiled=True,
+            blockxsize=2048,
+            blockysize=2048,  # closest to the 2025 tiling in the netcdf
+        )
 
-    overviews = "AUTO"
-    if var.name != "observation_count":
-        t3 = time.time() - t1
-        logger.info(f"Generate overviews {temp_path} - elapsed: {t3}")
-        OVERVIEW_LEVELS = [2, 4, 8, 16, 32, 64, 128, 256]
-        with rasterio.open(temp_path, "r+") as dst:
-            # Add missing CRS
-            crs_var = dataset.variables["crs"]
-            if "wkt" in crs_var.ncattrs():
-                dst.crs = rasterio.crs.CRS.from_wkt(crs_var.getncattr("wkt"))
-            # by default average is good for the imagery with the counts, but average
-            # leads to black artifacts in the land cover imagery so use nearest instead
-            resampling = Resampling.average
-            if var.name == "lccs_class":
-                resampling = Resampling.nearest
-            dst.build_overviews(OVERVIEW_LEVELS, resampling)
-            dst.update_tags(ns="rio_overview", resampling=resampling.name)
-            overviews = "FORCE_USE_EXISTING"
-    else:
-        logger.info(f"SKIPPED Overviews {temp_path}")
-        overviews = "NONE"
+        overviews = "AUTO"
+        if var.name != "observation_count":
+            t3 = time.time() - t1
+            logger.info(f"Generate overviews {temp_path} - elapsed: {t3}")
+            OVERVIEW_LEVELS = [2, 4, 8, 16, 32, 64, 128, 256]
+            with rasterio.open(temp_path, "r+") as dst:
+                # Add missing CRS
+                crs_var = dataset.variables["crs"]
+                if "wkt" in crs_var.ncattrs():
+                    dst.crs = rasterio.crs.CRS.from_wkt(crs_var.getncattr("wkt"))
+                # by default average is good for the imagery with the counts, but average
+                # leads to black artifacts in the land cover imagery so use nearest instead
+                resampling = Resampling.average
+                if var.name == "lccs_class":
+                    resampling = Resampling.nearest
+                dst.build_overviews(OVERVIEW_LEVELS, resampling)
+                dst.update_tags(ns="rio_overview", resampling=resampling.name)
+                overviews = "FORCE_USE_EXISTING"
+        else:
+            logger.info(f"SKIPPED Overviews {temp_path}")
+            overviews = "NONE"
 
-    t4 = time.time() - t1
-    logger.info(f"Convert to COG {dest_path} - elapsed: {t4}")
-    src = gdal.Open(temp_path)
-    if var.name == "lccs_class":
-        add_color_map(src, classes.TABLE)
-    src = gdal.Translate(
-        dest_path,
-        src,
-        format="COG",
-        creationOptions=[
-            "COMPRESS=DEFLATE",
-            "LEVEL=9",
-            "NUM_THREADS=ALL_CPUS",
-            "PREDICTOR=YES",
-            f"OVERVIEWS={overviews}",
-        ],
-    )
+        t4 = time.time() - t1
+        logger.info(f"Convert to COG {dest_path} - elapsed: {t4}")
+        src = gdal.Open(temp_path)
+        if var.name == "lccs_class":
+            add_color_map(src, classes.TABLE)
+        src = gdal.Translate(
+            dest_path,
+            src,
+            format="COG",
+            creationOptions=[
+                "COMPRESS=DEFLATE",
+                "LEVEL=9",
+                "NUM_THREADS=ALL_CPUS",
+                "PREDICTOR=YES",
+                f"OVERVIEWS={overviews}",
+            ],
+        )
 
-    t5 = time.time() - t1
-    logger.info(f"Finished {dest_path} - elapsed: {t5}")
+        t5 = time.time() - t1
+        logger.info(f"Finished {dest_path} - elapsed: {t5}")
 
     title = var.getncattr("long_name")
     if isinstance(title, str) and len(title) > 0:
@@ -135,6 +137,7 @@ def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> 
     # Projection details
     proj_asset_attrs = ProjectionExtension.ext(asset)
     proj_asset_attrs.shape = [src.RasterXSize, src.RasterYSize]
+    proj_asset_attrs.transform = src.GetGeoTransform()
 
     # Close file handler for GDAL
     src = None

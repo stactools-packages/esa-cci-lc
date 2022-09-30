@@ -104,6 +104,8 @@ CLASSIFICATION_EXTENSION = (
 )
 DATACUBE_EXTENSION = "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"
 PROCESSING_EXTENSION = "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
+# For summaries, until supported: https://github.com/stac-utils/pystac/issues/890
+PROJECTION_EXTENSION = "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
 
 # Common
 GSD = 300

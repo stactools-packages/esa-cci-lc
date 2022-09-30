@@ -90,6 +90,7 @@ def create_collection(
             "gsd": [constants.GSD],
             "esa_cci_lc:version": constants.VERSIONS,
             "classification:classes": classification,
+            "proj:epsg": [constants.EPSG_CODE],
         },
         # Up the maxcount for the classes, otherwise the classes will be omitted from output
         maxcount=len(classification) + 1,
@@ -99,8 +100,9 @@ def create_collection(
         stac_extensions=[
             constants.ESA_CCI_LC_EXTENSION,
             constants.CLASSIFICATION_EXTENSION,
-            # constants.DATACUBE_EXTENSION,
-            # constants.PROCESSING_EXTENSION,
+            # todo: replace with Projection extension from PySTAC
+            # https://github.com/stac-utils/pystac/issues/890
+            constants.PROJECTION_EXTENSION,
         ],
         id=id,
         title=constants.TITLE,
@@ -193,7 +195,7 @@ def create_item(
         end = dataset.time_coverage_end
         if start[0:4] != end[0:4]:
             raise Exception(
-                "Expected a yearly land cover, but got different start and end years"
+                "Expected a yearly land cover product, but got different start and end years"
             )
         year = start[0:4]
         start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")

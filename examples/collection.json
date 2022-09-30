@@ -71,6 +71,7 @@
   "stac_extensions": [
     "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json",
     "https://stac-extensions.github.io/classification/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
     "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
   ],
@@ -384,7 +385,7 @@
         "quality",
         "cloud-optimized"
       ],
-      "description": "Number of valid satellite observations that have contributed to each pixel's classification."
+      "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!"
     },
     "processed_flag": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
@@ -744,6 +745,9 @@
         "description": "Permanent snow and ice",
         "color_hint": "FFFFFF"
       }
+    ],
+    "proj:epsg": [
+      4326
     ]
   }
 }

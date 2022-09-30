@@ -305,7 +305,19 @@
           "color_hint": "FFFFFF"
         }
       ],
-      "created": "2022-09-27T13:32:25.862366Z",
+      "created": "2022-09-30T10:58:11.160376Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
       "roles": [
         "data",
         "cloud-optimized"
@@ -328,7 +340,19 @@
           "description": "Processed"
         }
       ],
-      "created": "2022-09-27T13:32:25.862426Z",
+      "created": "2022-09-30T11:00:33.967418Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
       "roles": [
         "quality",
         "cloud-optimized"
@@ -371,7 +395,19 @@
           "description": "Filled"
         }
       ],
-      "created": "2022-09-27T13:32:25.862460Z",
+      "created": "2022-09-30T11:03:25.232575Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
       "roles": [
         "quality",
         "cloud-optimized"
@@ -382,7 +418,19 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of valid observations",
       "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!",
-      "created": "2022-09-27T13:32:25.862485Z",
+      "created": "2022-09-30T11:15:55.524294Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
       "roles": [
         "quality",
         "cloud-optimized"
@@ -393,7 +441,19 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of class changes",
       "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
-      "created": "2022-09-27T13:32:25.862509Z",
+      "created": "2022-09-30T11:18:54.417065Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
       "roles": [
         "quality",
         "cloud-optimized"
@@ -537,12 +597,12 @@
         64800
       ],
       "proj:transform": [
+        -180.0,
         0.002777777777778,
         0.0,
+        90.0,
         0.0,
-        -0.002777777777778,
-        -180.0,
-        90.0
+        -0.002777777777778
       ],
       "roles": [
         "data",
