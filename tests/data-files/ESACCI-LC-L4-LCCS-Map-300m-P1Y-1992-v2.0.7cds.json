@@ -1,0 +1,875 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds",
+  "properties": {
+    "esa_cci_lc:version": "2.0.7cds",      "classification:classes": [
+      {
+        "value": 0,
+        "name": "no-data",
+        "description": "No Data",
+        "color_hint": "000000",
+        "no_data": true
+      },
+      {
+        "value": 10,
+        "name": "cropland-1",
+        "description": "Cropland, rainfed",
+        "color_hint": "FFFF64"
+      },
+      {
+        "value": 11,
+        "name": "cropland-1a",
+        "description": "Cropland, rainfed, herbaceous cover",
+        "color_hint": "FFFF64",
+        "regional": true
+      },
+      {
+        "value": 12,
+        "name": "cropland-1b",
+        "description": "Cropland, rainfed, tree, or shrub cover",
+        "color_hint": "FFFF00",
+        "regional": true
+      },
+      {
+        "value": 20,
+        "name": "cropland-2",
+        "description": "Cropland, irrigated or post-flooding",
+        "color_hint": "AAF0F0"
+      },
+      {
+        "value": 30,
+        "name": "cropland-3",
+        "description": "Mosaic cropland (>50%) / natural vegetation (tree, shrub, herbaceous cover) (<50%)",
+        "color_hint": "DCF064"
+      },
+      {
+        "value": 40,
+        "name": "natural-veg",
+        "description": "Mosaic natural vegetation (tree, shrub, herbaceous cover) (>50%) / cropland (<50%)",
+        "color_hint": "C8C864"
+      },
+      {
+        "value": 50,
+        "name": "tree-1",
+        "description": "Tree cover, broadleaved, evergreen, closed to open (>15%)",
+        "color_hint": "006400"
+      },
+      {
+        "value": 60,
+        "name": "tree-2",
+        "description": "Tree cover, broadleaved, deciduous, closed to open (>15%)",
+        "color_hint": "00A000"
+      },
+      {
+        "value": 61,
+        "name": "tree-2a",
+        "description": "Tree cover, broadleaved, deciduous, closed (>40%)",
+        "color_hint": "00A000",
+        "regional": true
+      },
+      {
+        "value": 62,
+        "name": "tree-2b",
+        "description": "Tree cover, broadleaved, deciduous, open (15-40%)",
+        "color_hint": "AAC800",
+        "regional": true
+      },
+      {
+        "value": 70,
+        "name": "tree-3",
+        "description": "Tree cover, needleleaved, evergreen, closed to open (>15%)",
+        "color_hint": "003C00"
+      },
+      {
+        "value": 71,
+        "name": "tree-3a",
+        "description": "Tree cover, needleleaved, evergreen, closed (>40%)",
+        "color_hint": "003C00",
+        "regional": true
+      },
+      {
+        "value": 72,
+        "name": "tree-3b",
+        "description": "Tree cover, needleleaved, evergreen, open (15-40%)",
+        "color_hint": "005000",
+        "regional": true
+      },
+      {
+        "value": 80,
+        "name": "tree-4",
+        "description": "Tree cover, needleleaved, deciduous, closed to open (>15%)",
+        "color_hint": "285000"
+      },
+      {
+        "value": 81,
+        "name": "tree-4a",
+        "description": "Tree cover, needleleaved, deciduous, closed (>40%)",
+        "color_hint": "285000",
+        "regional": true
+      },
+      {
+        "value": 82,
+        "name": "tree-4b",
+        "description": "Tree cover, needleleaved, deciduous, open (15-40%)",
+        "color_hint": "286400",
+        "regional": true
+      },
+      {
+        "value": 90,
+        "name": "tree-5",
+        "description": "Tree cover, mixed leaf type (broadleaved and needleleaved)",
+        "color_hint": "788200"
+      },
+      {
+        "value": 100,
+        "name": "tree-shrub",
+        "description": "Mosaic tree and shrub (>50%) / herbaceous cover (<50%)",
+        "color_hint": "8CA000"
+      },
+      {
+        "value": 110,
+        "name": "herbaceous",
+        "description": "Mosaic herbaceous cover (>50%) / tree and shrub (<50%)",
+        "color_hint": "BE9600"
+      },
+      {
+        "value": 120,
+        "name": "shrubland",
+        "description": "Shrubland",
+        "color_hint": "966400"
+      },
+      {
+        "value": 121,
+        "name": "shrubland-a",
+        "description": "Evergreen shrubland",
+        "color_hint": "966400",
+        "regional": true
+      },
+      {
+        "value": 122,
+        "name": "shrubland-b",
+        "description": "Deciduous shrubland",
+        "color_hint": "966400",
+        "regional": true
+      },
+      {
+        "value": 130,
+        "name": "grassland",
+        "description": "Grassland",
+        "color_hint": "FFB432"
+      },
+      {
+        "value": 140,
+        "name": "lichens-moses",
+        "description": "Lichens and mosses",
+        "color_hint": "FFDCD2"
+      },
+      {
+        "value": 150,
+        "name": "sparse-veg",
+        "description": "Sparse vegetation (tree, shrub, herbaceous cover) (<15%)",
+        "color_hint": "FFEBAF"
+      },
+      {
+        "value": 151,
+        "name": "sparse-veg-a",
+        "description": "Sparse tree (<15%)",
+        "color_hint": "FFC864",
+        "regional": true
+      },
+      {
+        "value": 152,
+        "name": "sparse-veg-b",
+        "description": "Sparse shrub (<15%)",
+        "color_hint": "FFD278",
+        "regional": true
+      },
+      {
+        "value": 153,
+        "name": "sparse-veg-c",
+        "description": "Sparse herbaceous cover (<15%)",
+        "color_hint": "FFEBAF",
+        "regional": true
+      },
+      {
+        "value": 160,
+        "name": "flooded-tree-1",
+        "description": "Tree cover, flooded, fresh or brackish water",
+        "color_hint": "00785A"
+      },
+      {
+        "value": 170,
+        "name": "flooded-tree-2",
+        "description": "Tree cover, flooded, saline water",
+        "color_hint": "009678"
+      },
+      {
+        "value": 180,
+        "name": "flooded-shrub-herbaceous",
+        "description": "Shrub or herbaceous cover, flooded, fresh/saline/brackish water",
+        "color_hint": "00DC82"
+      },
+      {
+        "value": 190,
+        "name": "urban",
+        "description": "Urban areas",
+        "color_hint": "C31400"
+      },
+      {
+        "value": 200,
+        "name": "bare",
+        "description": "Bare areas",
+        "color_hint": "FFF5D7"
+      },
+      {
+        "value": 201,
+        "name": "bare-a",
+        "description": "Consolidated bare areas",
+        "color_hint": "DCDCDC",
+        "regional": true
+      },
+      {
+        "value": 202,
+        "name": "bare-b",
+        "description": "Unconsolidated bare areas",
+        "color_hint": "FFF5D7",
+        "regional": true
+      },
+      {
+        "value": 210,
+        "name": "water",
+        "description": "Water bodies",
+        "color_hint": "0046C8"
+      },
+      {
+        "value": 220,
+        "name": "snow-ice",
+        "description": "Permanent snow and ice",
+        "color_hint": "FFFFFF"
+      }
+    ],
+    "title": "Land Cover Map of 1992",
+    "gsd": 300,
+    "start_datetime": "1992-01-01T00:00:00Z",
+    "end_datetime": "1992-12-31T23:59:59Z",
+    "proj:epsg": 4326,
+    "processing:software": {
+      "amorgos": "4,0",
+      "lc-sdr": "1.0",
+      "lc-sr": "1.0",
+      "lc-classification": "1.0",
+      "lc-user-tools(1)": "3.13",
+      "lc-user-tools(2)": "4.3"
+    },
+    "processing:lineage": "Produced based on the following data sources: MERIS FR L1B version 5.05, MERIS RR L1B version 8.0, SPOT VGT P",
+    "datetime": "1992-07-01T23:59:59.500000Z"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -180,
+          -90
+        ],
+        [
+          180,
+          -90
+        ],
+        [
+          180,
+          90
+        ],
+        [
+          -180,
+          90
+        ],
+        [
+          -180,
+          -90
+        ]
+      ]
+    ]
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "/mnt/c/Projects/esa-cci-lc/examples/collection.json",
+      "type": "application/json",
+      "title": "ESA Climate Change Initiative Land Cover"
+    }
+  ],
+  "assets": {
+    "lccs_class": {
+      "href": "tests/data-files/lccs_class.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Land cover class defined in LCCS",
+      "description": "Land cover class per pixel, defined using the Land Cover Classification System developed by the United Nations Food and Agriculture Organization.",
+      "classification:classes": [
+        {
+          "value": 0,
+          "name": "no-data",
+          "description": "No Data",
+          "color_hint": "000000",
+          "no_data": true
+        },
+        {
+          "value": 10,
+          "name": "cropland-1",
+          "description": "Cropland, rainfed",
+          "color_hint": "FFFF64"
+        },
+        {
+          "value": 11,
+          "name": "cropland-1a",
+          "description": "Cropland, rainfed, herbaceous cover",
+          "color_hint": "FFFF64",
+          "regional": true
+        },
+        {
+          "value": 12,
+          "name": "cropland-1b",
+          "description": "Cropland, rainfed, tree, or shrub cover",
+          "color_hint": "FFFF00",
+          "regional": true
+        },
+        {
+          "value": 20,
+          "name": "cropland-2",
+          "description": "Cropland, irrigated or post-flooding",
+          "color_hint": "AAF0F0"
+        },
+        {
+          "value": 30,
+          "name": "cropland-3",
+          "description": "Mosaic cropland (>50%) / natural vegetation (tree, shrub, herbaceous cover) (<50%)",
+          "color_hint": "DCF064"
+        },
+        {
+          "value": 40,
+          "name": "natural-veg",
+          "description": "Mosaic natural vegetation (tree, shrub, herbaceous cover) (>50%) / cropland (<50%)",
+          "color_hint": "C8C864"
+        },
+        {
+          "value": 50,
+          "name": "tree-1",
+          "description": "Tree cover, broadleaved, evergreen, closed to open (>15%)",
+          "color_hint": "006400"
+        },
+        {
+          "value": 60,
+          "name": "tree-2",
+          "description": "Tree cover, broadleaved, deciduous, closed to open (>15%)",
+          "color_hint": "00A000"
+        },
+        {
+          "value": 61,
+          "name": "tree-2a",
+          "description": "Tree cover, broadleaved, deciduous, closed (>40%)",
+          "color_hint": "00A000",
+          "regional": true
+        },
+        {
+          "value": 62,
+          "name": "tree-2b",
+          "description": "Tree cover, broadleaved, deciduous, open (15-40%)",
+          "color_hint": "AAC800",
+          "regional": true
+        },
+        {
+          "value": 70,
+          "name": "tree-3",
+          "description": "Tree cover, needleleaved, evergreen, closed to open (>15%)",
+          "color_hint": "003C00"
+        },
+        {
+          "value": 71,
+          "name": "tree-3a",
+          "description": "Tree cover, needleleaved, evergreen, closed (>40%)",
+          "color_hint": "003C00",
+          "regional": true
+        },
+        {
+          "value": 72,
+          "name": "tree-3b",
+          "description": "Tree cover, needleleaved, evergreen, open (15-40%)",
+          "color_hint": "005000",
+          "regional": true
+        },
+        {
+          "value": 80,
+          "name": "tree-4",
+          "description": "Tree cover, needleleaved, deciduous, closed to open (>15%)",
+          "color_hint": "285000"
+        },
+        {
+          "value": 81,
+          "name": "tree-4a",
+          "description": "Tree cover, needleleaved, deciduous, closed (>40%)",
+          "color_hint": "285000",
+          "regional": true
+        },
+        {
+          "value": 82,
+          "name": "tree-4b",
+          "description": "Tree cover, needleleaved, deciduous, open (15-40%)",
+          "color_hint": "286400",
+          "regional": true
+        },
+        {
+          "value": 90,
+          "name": "tree-5",
+          "description": "Tree cover, mixed leaf type (broadleaved and needleleaved)",
+          "color_hint": "788200"
+        },
+        {
+          "value": 100,
+          "name": "tree-shrub",
+          "description": "Mosaic tree and shrub (>50%) / herbaceous cover (<50%)",
+          "color_hint": "8CA000"
+        },
+        {
+          "value": 110,
+          "name": "herbaceous",
+          "description": "Mosaic herbaceous cover (>50%) / tree and shrub (<50%)",
+          "color_hint": "BE9600"
+        },
+        {
+          "value": 120,
+          "name": "shrubland",
+          "description": "Shrubland",
+          "color_hint": "966400"
+        },
+        {
+          "value": 121,
+          "name": "shrubland-a",
+          "description": "Evergreen shrubland",
+          "color_hint": "966400",
+          "regional": true
+        },
+        {
+          "value": 122,
+          "name": "shrubland-b",
+          "description": "Deciduous shrubland",
+          "color_hint": "966400",
+          "regional": true
+        },
+        {
+          "value": 130,
+          "name": "grassland",
+          "description": "Grassland",
+          "color_hint": "FFB432"
+        },
+        {
+          "value": 140,
+          "name": "lichens-moses",
+          "description": "Lichens and mosses",
+          "color_hint": "FFDCD2"
+        },
+        {
+          "value": 150,
+          "name": "sparse-veg",
+          "description": "Sparse vegetation (tree, shrub, herbaceous cover) (<15%)",
+          "color_hint": "FFEBAF"
+        },
+        {
+          "value": 151,
+          "name": "sparse-veg-a",
+          "description": "Sparse tree (<15%)",
+          "color_hint": "FFC864",
+          "regional": true
+        },
+        {
+          "value": 152,
+          "name": "sparse-veg-b",
+          "description": "Sparse shrub (<15%)",
+          "color_hint": "FFD278",
+          "regional": true
+        },
+        {
+          "value": 153,
+          "name": "sparse-veg-c",
+          "description": "Sparse herbaceous cover (<15%)",
+          "color_hint": "FFEBAF",
+          "regional": true
+        },
+        {
+          "value": 160,
+          "name": "flooded-tree-1",
+          "description": "Tree cover, flooded, fresh or brackish water",
+          "color_hint": "00785A"
+        },
+        {
+          "value": 170,
+          "name": "flooded-tree-2",
+          "description": "Tree cover, flooded, saline water",
+          "color_hint": "009678"
+        },
+        {
+          "value": 180,
+          "name": "flooded-shrub-herbaceous",
+          "description": "Shrub or herbaceous cover, flooded, fresh/saline/brackish water",
+          "color_hint": "00DC82"
+        },
+        {
+          "value": 190,
+          "name": "urban",
+          "description": "Urban areas",
+          "color_hint": "C31400"
+        },
+        {
+          "value": 200,
+          "name": "bare",
+          "description": "Bare areas",
+          "color_hint": "FFF5D7"
+        },
+        {
+          "value": 201,
+          "name": "bare-a",
+          "description": "Consolidated bare areas",
+          "color_hint": "DCDCDC",
+          "regional": true
+        },
+        {
+          "value": 202,
+          "name": "bare-b",
+          "description": "Unconsolidated bare areas",
+          "color_hint": "FFF5D7",
+          "regional": true
+        },
+        {
+          "value": 210,
+          "name": "water",
+          "description": "Water bodies",
+          "color_hint": "0046C8"
+        },
+        {
+          "value": 220,
+          "name": "snow-ice",
+          "description": "Permanent snow and ice",
+          "color_hint": "FFFFFF"
+        }
+      ],
+      "created": "2022-09-30T11:39:53.751396Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
+      "roles": [
+        "data",
+        "cloud-optimized"
+      ]
+    },
+    "processed_flag": {
+      "href": "tests/data-files/processed_flag.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "LC map processed area flag",
+      "description": "Flag to mark areas that could not be classified.",
+      "classification:classes": [
+        {
+          "value": 0,
+          "name": "not_processed",
+          "description": "Not processed"
+        },
+        {
+          "value": 1,
+          "name": "processed",
+          "description": "Processed"
+        }
+      ],
+      "created": "2022-09-30T11:42:19.701847Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
+      "roles": [
+        "quality",
+        "cloud-optimized"
+      ]
+    },
+    "current_pixel_state": {
+      "href": "tests/data-files/current_pixel_state.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "LC pixel type mask",
+      "description": "Pixel identification from satellite surface reflectance observations, mainly distinguishing between land, water, and snow/ice.",
+      "classification:classes": [
+        {
+          "value": 1,
+          "name": "land",
+          "description": "Clear land"
+        },
+        {
+          "value": 2,
+          "name": "water",
+          "description": "Clear water"
+        },
+        {
+          "value": 3,
+          "name": "snow",
+          "description": "Clear snow / ice"
+        },
+        {
+          "value": 4,
+          "name": "cloud",
+          "description": "Cloud"
+        },
+        {
+          "value": 5,
+          "name": "cloud_shadow",
+          "description": "Cloud_shadow"
+        },
+        {
+          "value": 6,
+          "name": "filled",
+          "description": "Filled"
+        }
+      ],
+      "created": "2022-09-30T11:45:14.790327Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
+      "roles": [
+        "quality",
+        "cloud-optimized"
+      ]
+    },
+    "observation_count": {
+      "href": "tests/data-files/observation_count.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Number of valid observations",
+      "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!",
+      "created": "2022-09-30T11:57:42.435988Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
+      "roles": [
+        "quality",
+        "cloud-optimized"
+      ]
+    },
+    "change_count": {
+      "href": "tests/data-files/change_count.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Number of class changes",
+      "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
+      "created": "2022-09-30T12:00:03.671412Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777777778,
+        0.0,
+        90.00000000000001,
+        0.0,
+        -0.0027777777777777783
+      ],
+      "roles": [
+        "quality",
+        "cloud-optimized"
+      ]
+    },
+    "netcdf": {
+      "href": "tests/data-files/ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds.nc",
+      "type": "application/netcdf",
+      "title": "Original netCDF 4 file",
+      "cube:dimensions": {
+        "lat": {
+          "type": "lat",
+          "extent": [
+            -90.0,
+            90.0
+          ]
+        },
+        "lon": {
+          "type": "lon",
+          "extent": [
+            -180.0,
+            180.0
+          ]
+        },
+        "time": {
+          "type": "time",
+          "values": [
+            8035.0
+          ]
+        },
+        "bounds": {
+          "type": "bounds",
+          "values": [
+            0,
+            1
+          ]
+        }
+      },
+      "cube:variables": {
+        "lccs_class": {
+          "dimensions": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "type": "data",
+          "description": "Land cover class defined in LCCS"
+        },
+        "processed_flag": {
+          "dimensions": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "type": "data",
+          "description": "LC map processed area flag"
+        },
+        "current_pixel_state": {
+          "dimensions": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "type": "data",
+          "description": "LC pixel type mask"
+        },
+        "observation_count": {
+          "dimensions": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "type": "data",
+          "description": "number of valid observations"
+        },
+        "change_count": {
+          "dimensions": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "type": "data",
+          "description": "number of class changes"
+        },
+        "lat": {
+          "dimensions": [
+            "lat"
+          ],
+          "type": "auxiliary",
+          "description": "latitude",
+          "unit": "degrees_north",
+          "axis": "Y"
+        },
+        "lon": {
+          "dimensions": [
+            "lon"
+          ],
+          "type": "auxiliary",
+          "description": "longitude",
+          "unit": "degrees_east",
+          "axis": "X"
+        },
+        "crs": {
+          "dimensions": [],
+          "type": "auxiliary"
+        },
+        "lat_bounds": {
+          "dimensions": [
+            "lat",
+            "bounds"
+          ],
+          "type": "auxiliary"
+        },
+        "lon_bounds": {
+          "dimensions": [
+            "lon",
+            "bounds"
+          ],
+          "type": "auxiliary"
+        },
+        "time_bounds": {
+          "dimensions": [
+            "time",
+            "bounds"
+          ],
+          "type": "auxiliary"
+        },
+        "time": {
+          "dimensions": [
+            "time"
+          ],
+          "type": "auxiliary",
+          "description": "time",
+          "unit": "days since 1970-01-01 00:00:00",
+          "axis": "T"
+        }
+      },
+      "created": "2018-11-30T09:54:51Z",
+      "proj:shape": [
+        129600,
+        64800
+      ],
+      "proj:transform": [
+        -180.0,
+        0.002777777777778,
+        0.0,
+        90.0,
+        0.0,
+        -0.002777777777778
+      ],
+      "roles": [
+        "data",
+        "quality",
+        "source"
+      ]
+    }
+  },
+  "bbox": [
+    -180.0,
+    -90.0,
+    180.0,
+    90.0
+  ],
+  "stac_extensions": [
+    "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json",
+    "https://stac-extensions.github.io/classification/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"
+  ],
+  "collection": "esa-cci-lc"
+}
