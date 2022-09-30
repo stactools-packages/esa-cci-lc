@@ -6,8 +6,9 @@ from typing import Callable, List
 
 from click import Command, Group
 from deepdiff import DeepDiff
-from stactools.esa_cci_lc.commands import create_esaccilc_command
 from stactools.testing.cli_test import CliTestCase
+
+from stactools.esa_cci_lc.commands import create_esaccilc_command
 
 SRC_FOLDER = "./tests/data-files/"
 
@@ -25,6 +26,7 @@ COG_KEYS = [
     "observation_count",
     "processed_flag",
 ]
+
 
 class CommandsTest(CliTestCase):
     def create_subcommand_functions(self) -> List[Callable[[Group], Command]]:
@@ -86,7 +88,7 @@ class CommandsTest(CliTestCase):
                     )
                     if not withcog:
                         cmd = cmd + " --nocog TRUE"
-                    
+
                     result = self.run_command(cmd)
                     self.assertEqual(
                         result.exit_code, 0, msg="\n{}".format(result.output)
