@@ -1,7 +1,12 @@
+import os.path
+import shutil
 import unittest
 
 # from datetime import datetime, timezone
-from typing import Any, Dict, List
+from tempfile import TemporaryDirectory
+from typing import Any, Dict, List, Optional
+
+from pystac import Collection, Item
 
 from stactools.esa_cci_lc import stac
 
@@ -24,6 +29,39 @@ TEST_COLLECTIONS: List[Dict[str, Any]] = [
     },
 ]
 
+TEST_ITEMS: List[Dict[str, Any]] = [
+    {
+        "id": constants.TEST_FILES[0],
+        "year": 2020,
+        "collection": "./tests/data-files/collection.json",
+    },
+    {
+        "id": constants.TEST_FILES[1],
+        "year": 2016,
+        "collection": "./tests/data-files/collection.json",
+    },
+    {
+        "id": constants.TEST_FILES[2],
+        "year": 2015,
+        "collection": "./tests/data-files/collection.json",
+    },
+    {
+        "id": constants.TEST_FILES[3],
+        "year": 1992,
+        "collection": "./tests/data-files/collection.json",
+    },
+    {
+        "id": constants.TEST_FILES[0],
+        "year": 2020,
+        "nocog": True,
+    },
+    {
+        "id": constants.TEST_FILES[0],
+        "year": 2020,
+        "nonetcdf": True,
+    },
+]
+
 
 class StacTest(unittest.TestCase):
     def test_create_collection(self) -> None:
@@ -41,6 +79,7 @@ class StacTest(unittest.TestCase):
                 collection_dict = collection.to_dict()
 
                 self.assertEqual(collection.id, id)
+                self.assertEqual(collection.title, constants.TITLE)
 
                 self.assertEqual(collection_dict["sci:doi"], constants.DOI)
 
@@ -70,32 +109,126 @@ class StacTest(unittest.TestCase):
                         self.assertIn("description", asset)
                         self.assertEqual(asset["type"], constants.COG_MEDIA_TYPE)
                         self.assertIn("cloud-optimized", asset["roles"])
-                        if key in constants.TABLES:
-                            self.assertIn("classification:classes", asset)
+                        if key == "lccs_class":
+                            self.assertIn("data", asset["roles"])
                         else:
-                            self.assertNotIn("classification:classes", asset)
+                            self.assertIn("quality", asset["roles"])
+                        self.assertEqual(
+                            "classification:classes" in asset, key in constants.TABLES
+                        )
 
                 # Check netCDF asset
-                if nonetcdf:
-                    self.assertFalse("netcdf" in assets)
-                else:
-                    self.assertTrue("netcdf" in assets)
-                    asset = assets["netcdf"]
-                    self.assertIn("title", asset)
+                self.assertEqual(constants.NETCDF_KEY in assets, not nonetcdf)
+                if not nonetcdf:
+                    asset = assets[constants.NETCDF_KEY]
                     self.assertNotIn("href", asset)
                     self.assertEqual(asset["type"], constants.NETCDF_MEDIA_TYPE)
-                    self.assertIn("source", asset["roles"])
+                    self.assertEqual(asset["title"], constants.NETCDF_TITLE)
+                    self.assertEqual(asset["roles"], constants.NETCDF_ROLES)
                     self.assertNotIn("classification:classes", asset)
 
-    def test_create_item(self) -> None:
-        self.assertTrue(True)
-        # Write tests for each for the creation of STAC Items
-        # Create the STAC Item...
-        # item = stac.create_item("/path/to/asset.tif")
+    def test_create_item(self, withcog: bool = False) -> None:
+        for test_data in TEST_ITEMS:
+            with self.subTest(test_data=test_data):
+                id: str = test_data["id"]
+                year: int = test_data["year"]
+                test_data["nocog"] = (
+                    False
+                    if withcog
+                    and ("nocog" not in test_data or test_data["nocog"] is False)
+                    else True
+                )
+                nonetcdf: bool = (
+                    test_data["nonetcdf"] if "nonetcdf" in test_data else False
+                )
 
-        # Check that it has some required attributes
-        # assert item.id == "my-item-id"
-        # self.assertEqual(item.other_attr...
+                collection: Optional[Collection] = None
+                if "collection" in test_data:
+                    collection = Collection.from_file(test_data["collection"])
 
-        # Validate
-        # item.validate()
+                item: Optional[Item] = None
+                with TemporaryDirectory() as tmp_dir:
+                    src_data_file = os.path.join("./tests/data-files/", f"{id}.nc")
+                    dest_data_file = os.path.join(tmp_dir, f"{id}.nc")
+                    shutil.copyfile(src_data_file, dest_data_file)
+
+                    del test_data["id"]
+                    del test_data["year"]
+                    test_data["asset_href"] = dest_data_file
+                    test_data["collection"] = collection
+
+                    item = stac.create_item(**test_data)
+                    item.validate()
+
+                self.assertIsNotNone(item)
+                self.assertEqual(item.id, id)
+                self.assertEqual(item.bbox, constants.BBOX)
+                self.assertEqual(item.geometry, constants.GEOMETRY)
+                if collection is not None:
+                    self.assertEqual(item.collection_id, collection.id)
+                else:
+                    self.assertIsNone(item.collection_id)
+
+                self.assertIn("datetime", item.properties)
+                self.assertEqual(
+                    item.properties["start_datetime"], f"{year}-01-01T00:00:00Z"
+                )
+                self.assertEqual(
+                    item.properties["end_datetime"], f"{year}-12-31T23:59:59Z"
+                )
+                self.assertEqual(item.properties["title"], f"Land Cover Map of {year}")
+                self.assertIn(item.properties["esa_cci_lc:version"], constants.VERSIONS)
+                self.assertTrue(id.endswith(item.properties["esa_cci_lc:version"]))
+                self.assertEqual(
+                    "classification:classes" in item.properties, test_data["nocog"]
+                )
+                self.assertEqual(item.properties["gsd"], constants.GSD)
+                self.assertEqual(item.properties["proj:epsg"], 4326)
+                self.assertIn("processing:software", item.properties)
+                self.assertIn("processing:lineage", item.properties)
+
+                asset_count = 6
+                if test_data["nocog"]:
+                    asset_count -= 5
+                if nonetcdf:
+                    asset_count -= 1
+                self.assertEqual(len(item.assets), asset_count)
+
+                # Check COG assets
+                for key in constants.DATA_VARIABLES:
+                    self.assertEqual(key in item.assets, not test_data["nocog"])
+                    if not test_data["nocog"]:
+                        asset = item.assets[key].to_dict()
+                        self.assertIn("href", asset)
+                        self.assertEqual(asset["type"], constants.COG_MEDIA_TYPE)
+                        self.assertIn("title", asset)
+                        self.assertIn("description", asset)
+                        self.assertIn("created", asset)
+                        self.assertEqual(len(asset["proj:shape"]), 2)
+                        self.assertEqual(len(asset["proj:transform"]), 6)
+                        if key == "lccs_class":
+                            self.assertIn("data", asset["roles"])
+                        else:
+                            self.assertIn("quality", asset["roles"])
+                        self.assertIn("cloud-optimized", asset["roles"])
+                        self.assertEqual(
+                            "classification:classes" in asset, key in constants.TABLES
+                        )
+                        self.assertNotIn("cube:dimensions", asset)
+                        self.assertNotIn("cube:variables", asset)
+
+                # Check netCDF asset
+                self.assertEqual(constants.NETCDF_KEY in item.assets, not nonetcdf)
+                if not nonetcdf:
+                    asset = item.assets[constants.NETCDF_KEY].to_dict()
+                    self.assertIn("href", asset)
+                    self.assertEqual(asset["type"], constants.NETCDF_MEDIA_TYPE)
+                    self.assertEqual(asset["title"], constants.NETCDF_TITLE)
+                    self.assertEqual(asset["roles"], constants.NETCDF_ROLES)
+                    self.assertNotIn("description", asset)
+                    self.assertIn("created", asset)
+                    self.assertIn("cube:dimensions", asset)
+                    self.assertIn("cube:variables", asset)
+                    self.assertEqual(len(asset["proj:shape"]), 2)
+                    self.assertEqual(len(asset["proj:transform"]), 6)
+                    self.assertNotIn("classification:classes", asset)

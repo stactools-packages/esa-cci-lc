@@ -3,7 +3,8 @@
   "stac_version": "1.0.0",
   "id": "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds",
   "properties": {
-    "esa_cci_lc:version": "2.0.7cds",      "classification:classes": [
+    "esa_cci_lc:version": "2.0.7cds",
+	"classification:classes": [
       {
         "value": 0,
         "name": "no-data",
