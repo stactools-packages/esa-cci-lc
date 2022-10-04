@@ -103,3 +103,7 @@ To run the tests:
 ```shell
 pytest -vv
 ```
+
+**Note:** Due to the long processing time of the tests with COGs conversion (in total 3-4 hours on 
+my local machine), the tests by default run without COG processing (i.e. `--nocog` is enabled).
+To run the tests with COG generation, please run `pytest -vv --withcog`.

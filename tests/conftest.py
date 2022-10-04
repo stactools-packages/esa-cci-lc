@@ -1,4 +1,7 @@
-from pytest import Metafunc, Parser
+from typing import Any
+
+import pytest
+from pytest import Parser
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -10,9 +13,6 @@ def pytest_addoption(parser: Parser) -> None:
     )
 
 
-def pytest_generate_tests(metafunc: Metafunc) -> None:
-    # This is called for every test. Only get/set command line arguments
-    # if the argument is specified in the list of test "fixturenames".
-    option_value = metafunc.config.option.withcog
-    if "withcog" in metafunc.fixturenames and option_value is True:
-        metafunc.parametrize("withcog", [option_value])
+@pytest.fixture()
+def pass_parameter(request: Any) -> None:
+    setattr(request.cls, "withcog", request.config.getoption("--withcog"))

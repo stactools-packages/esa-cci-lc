@@ -6,6 +6,7 @@ import unittest
 from tempfile import TemporaryDirectory
 from typing import Any, Dict, List, Optional
 
+import pytest
 from pystac import Collection, Item
 
 from stactools.esa_cci_lc import stac
@@ -127,14 +128,15 @@ class StacTest(unittest.TestCase):
                     self.assertEqual(asset["roles"], constants.NETCDF_ROLES)
                     self.assertNotIn("classification:classes", asset)
 
-    def test_create_item(self, withcog: bool = False) -> None:
+    @pytest.mark.usefixtures("pass_parameter")
+    def test_create_item(self) -> None:
         for test_data in TEST_ITEMS:
             with self.subTest(test_data=test_data):
                 id: str = test_data["id"]
                 year: int = test_data["year"]
                 test_data["nocog"] = (
                     False
-                    if withcog
+                    if self.withcog  # type: ignore[attr-defined]
                     and ("nocog" not in test_data or test_data["nocog"] is False)
                     else True
                 )

@@ -4,6 +4,7 @@ import shutil
 from tempfile import TemporaryDirectory
 from typing import Callable, List
 
+import pytest
 from click import Command, Group
 from deepdiff import DeepDiff
 from stactools.testing.cli_test import CliTestCase
@@ -52,7 +53,8 @@ class CommandsTest(CliTestCase):
                 print(diff)
             self.assertEqual(diff, {})
 
-    def test_create_item(self, withcog: bool = False) -> None:
+    @pytest.mark.usefixtures("pass_parameter")
+    def test_create_item(self) -> None:
         for id in constants.TEST_FILES:
             with self.subTest(id=id):
                 with TemporaryDirectory() as tmp_dir:
@@ -75,7 +77,7 @@ class CommandsTest(CliTestCase):
                         f"esa-cci-lc create-item {dest_data_file} {dest_stac}"
                         f" --collection {src_collection}"
                     )
-                    if not withcog:
+                    if not self.withcog:  # type: ignore[attr-defined]
                         cmd = cmd + " --nocog TRUE"
 
                     result = self.run_command(cmd)
@@ -96,7 +98,7 @@ class CommandsTest(CliTestCase):
 
                     self.assertEqual(item["id"], id)
 
-                    if withcog:
+                    if self.withcog:  # type: ignore[attr-defined]
                         del truth_item["properties"]["classification:classes"]
                     else:
                         for key in constants.DATA_VARIABLES:
