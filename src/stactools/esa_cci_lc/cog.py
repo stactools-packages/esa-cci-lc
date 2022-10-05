@@ -3,14 +3,13 @@ import os
 import tempfile
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import rasterio
 import rasterio.crs
 import rioxarray  # noqa: F401
 import xarray
 from netCDF4 import Dataset, Variable
-from osgeo import gdal
 from pystac import Asset, CommonMetadata
 from pystac.extensions.projection import ProjectionExtension
 from rasterio.enums import Resampling
@@ -67,59 +66,67 @@ def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> 
     with tempfile.TemporaryDirectory() as tmpdirname:
         t2 = time.time() - t1
         temp_path = os.path.join(tmpdirname, os.path.basename(dest_path))
-        logger.info(f"Write GeoTiff {temp_path} - elapsed: {t2}")
+        logger.info(f"[{t2}] Write intermediate GeoTiff {temp_path}")
+        # Convert to a GeoTiff as quickly as possible to be able to add overviews
         xds[var.name].rio.to_raster(
             temp_path,
             windowed=True,
-            compress="PACKBITS",
-            bigtiff=True,
+            compress="PACKBITS",  # Best compromise of speed and size
+            bigtiff=True,  # observation_count may reach 4GB in some cases
             tiled=True,
-            blockxsize=2048,
-            blockysize=2048,  # closest to the 2025 tiling in the netcdf
+            blockxsize=2048,  # closest to the 2025 tiling in the netcdf and
+            blockysize=2048,  # and was most efficient in my tests
         )
 
-        overviews = "AUTO"
-        if var.name != "observation_count":
-            t3 = time.time() - t1
-            logger.info(f"Generate overviews {temp_path} - elapsed: {t3}")
-            OVERVIEW_LEVELS = [2, 4, 8, 16, 32, 64, 128, 256]
-            with rasterio.open(temp_path, "r+") as dst:
-                # Add missing CRS
-                crs_var = dataset.variables["crs"]
-                if "wkt" in crs_var.ncattrs():
-                    dst.crs = rasterio.crs.CRS.from_wkt(crs_var.getncattr("wkt"))
-                # by default average is good for the imagery with the counts, but average
+        t3 = time.time() - t1
+        logger.info(f"[{t3}] Prepare final file")
+        OVERVIEW_LEVELS = [2, 4, 8, 16, 32, 64, 128, 256]
+        with rasterio.open(temp_path, "r+") as src:
+            if var.name == "observation_count":
+                logger.info(f"SKIPPED Overviews for variable {var.name}")
+                overviews = "NONE"
+            else:
+                # Add overviews (to the end of the file, i.e. this is not a COG yet)
+                # By default average is good for the imagery with the counts, but average
                 # leads to black artifacts in the land cover imagery so use nearest instead
                 resampling = Resampling.average
                 if var.name == "lccs_class":
                     resampling = Resampling.nearest
-                dst.build_overviews(OVERVIEW_LEVELS, resampling)
-                dst.update_tags(ns="rio_overview", resampling=resampling.name)
+                src.build_overviews(OVERVIEW_LEVELS, resampling)
+                src.update_tags(ns="rio_overview", resampling=resampling.name)
                 overviews = "FORCE_USE_EXISTING"
-        else:
-            logger.info(f"SKIPPED Overviews {temp_path}")
-            overviews = "NONE"
 
-        t4 = time.time() - t1
-        logger.info(f"Convert to COG {dest_path} - elapsed: {t4}")
-        src = gdal.Open(temp_path)
-        if var.name == "lccs_class":
-            add_color_map(src, classes.TABLE)
-        src = gdal.Translate(
-            dest_path,
-            src,
-            format="COG",
-            creationOptions=[
-                "COMPRESS=DEFLATE",
-                "LEVEL=9",
-                "NUM_THREADS=ALL_CPUS",
-                "PREDICTOR=YES",
-                f"OVERVIEWS={overviews}",
-            ],
-        )
+            t4 = time.time() - t1
+            logger.info(f"[{t4}] Convert to COG {dest_path}")
+            profile = src.profile
+            profile["driver"] = "COG"
+            profile["COMPRESS"] = "DEFLATE"
+            profile["LEVEL"] = 9
+            profile["NUM_THREADS"] = "ALL_CPUS"
+            profile["PREDICTOR"] = "Yes"
+            profile["OVERVIEWS"] = overviews
+            with rasterio.open(dest_path, "w", **profile) as dst:
+                # Add missing CRS
+                crs_var = dataset.variables["crs"]
+                if "wkt" in crs_var.ncattrs():
+                    src.crs = rasterio.crs.CRS.from_wkt(crs_var.getncattr("wkt"))
 
-        t5 = time.time() - t1
-        logger.info(f"Finished {dest_path} - elapsed: {t5}")
+                # Add color map
+                if var.name == "lccs_class":
+                    colors: Dict[str, Tuple[int]] = {}
+                    for row in classes.TABLE:
+                        if row[1] is not None:
+                            colors[row[0]] = tuple(row[1]) + (255,)  # type: ignore[assignment]
+
+                    if len(colors) > 0:
+                        dst.write_colormap(1, colors)
+                
+                # Write data
+                dst.write(src.read())
+
+
+            t5 = time.time() - t1
+            logger.info(f"[{t5}] Finished {dest_path}")
 
     title = var.getncattr("long_name")
     if isinstance(title, str) and len(title) > 0:
@@ -143,19 +150,3 @@ def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> 
     src = None
 
     return asset
-
-
-def add_color_map(file: Any, table: List[List[Any]]) -> None:
-    colors = gdal.ColorTable()
-    has_entry = False
-    for row in table:
-        if row[1] is None:
-            continue
-
-        colors.SetColorEntry(row[0], tuple(row[1]))
-        has_entry = True
-
-    if has_entry:
-        band = file.GetRasterBand(1)
-        band.SetRasterColorTable(colors)
-        band.SetRasterColorInterpretation(gdal.GCI_PaletteIndex)
