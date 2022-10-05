@@ -121,8 +121,12 @@ def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> 
                     if len(colors) > 0:
                         dst.write_colormap(1, colors)
                 
-                # Write data
-                dst.write(src.read())
+                # Write data (windowed)
+                for _, window in src.block_windows(1):
+                    dst.write(src.read(window=window))
+
+                # Write data (all at once)
+                # dst.write(src.read())
 
 
             t5 = time.time() - t1
