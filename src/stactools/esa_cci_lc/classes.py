@@ -1,6 +1,6 @@
 # fmt: off
 # flake8: noqa
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 # Value, RGB, Name, Description, Regional (def: False), Nodata (def: False)
 
