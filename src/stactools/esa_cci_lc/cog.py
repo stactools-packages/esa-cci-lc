@@ -92,7 +92,7 @@ def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> 
                 # leads to black artifacts in the land cover imagery so use nearest instead
                 resampling = Resampling.average
                 if var.name == "lccs_class":
-                    resampling = Resampling.nearest
+                    resampling = Resampling.mode
                 dst.build_overviews(OVERVIEW_LEVELS, resampling)
                 dst.update_tags(ns="rio_overview", resampling=resampling.name)
                 overviews = "FORCE_USE_EXISTING"
