@@ -26,8 +26,7 @@ def create_asset(
     title: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Creates a basic COG asset dict with shared core properties (title,
-    type, roles) and optionally an href.
+    Creates a basic COG asset dict with shared core properties and optionally an href.
     An href should be given for normal assets, but can be None for Item Asset
     Definitions.
 
@@ -58,6 +57,24 @@ def create_asset(
 
 
 def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> Asset:
+    """
+    Converts the given variable to a COG stored in `dest`.
+    This takes a three step approach for best efficiency:
+    1. Writes the variable to GeoTiff as fast as possible
+    2. It then adds additional metadata and overviews to the GeoTiff.
+    3. Lastly, it restructures the GeoTiff into a proper COG.
+    Some more details:
+    https://github.com/stactools-packages/esa-cci-lc/issues/1
+
+    Args:
+        source (str): The source netCDF file
+        dest (str): The path to the newly created COG file
+        dataset (Dataset): The source netCDF4 dataset
+        var (Variable): The source netCDF4 variable
+
+    Returns:
+        Asset: Asset object
+    """
     dest_path = os.path.join(dest, f"{var.name}.tif")
 
     t1 = time.time()
@@ -145,7 +162,21 @@ def create_from_var(source: str, dest: str, dataset: Dataset, var: Variable) -> 
     return asset
 
 
-def add_color_map(file: Any, table: List[List[Any]]) -> None:
+def add_color_map(file: Any, table: List[List[Any]], band_num: int = 1) -> None:
+    """
+    Adds a color map to a band of the given GDAL file handler.
+    Mutates the given file / works in-place and doesn't return anything.
+
+    Args:
+        file (Any): A file handler opened by GDAL
+        table (List[List[Any]]): An array of arrays with values and RGB values.
+                                 See classes.py for details.
+        band (int): The band to write the color map to (defaults to the first band).
+                    This is not zero-based!
+
+    Returns:
+        None
+    """
     colors = gdal.ColorTable()
     has_entry = False
     for row in table:
@@ -156,6 +187,6 @@ def add_color_map(file: Any, table: List[List[Any]]) -> None:
         has_entry = True
 
     if has_entry:
-        band = file.GetRasterBand(1)
+        band = file.GetRasterBand(band_num)
         band.SetRasterColorTable(colors)
         band.SetRasterColorInterpretation(gdal.GCI_PaletteIndex)
