@@ -32,33 +32,23 @@ TEST_COLLECTIONS: List[Dict[str, Any]] = [
 
 TEST_ITEMS: List[Dict[str, Any]] = [
     {
-        "id": constants.TEST_FILES[0],
-        "year": 2020,
+        "id": constants.TEST_FILES[0]["id"],
+        "year": constants.TEST_FILES[0]["year"],
         "collection": "./tests/data-files/collection.json",
     },
     {
-        "id": constants.TEST_FILES[1],
-        "year": 2016,
+        "id": constants.TEST_FILES[1]["id"],
+        "year": constants.TEST_FILES[1]["year"],
         "collection": "./tests/data-files/collection.json",
     },
     {
-        "id": constants.TEST_FILES[2],
-        "year": 2015,
-        "collection": "./tests/data-files/collection.json",
-    },
-    {
-        "id": constants.TEST_FILES[3],
-        "year": 1992,
-        "collection": "./tests/data-files/collection.json",
-    },
-    {
-        "id": constants.TEST_FILES[0],
-        "year": 2020,
+        "id": constants.TEST_FILES[0]["id"],
+        "year": constants.TEST_FILES[0]["year"],
         "nocog": True,
     },
     {
-        "id": constants.TEST_FILES[0],
-        "year": 2020,
+        "id": constants.TEST_FILES[0]["id"],
+        "year": constants.TEST_FILES[0]["year"],
         "nonetcdf": True,
     },
 ]

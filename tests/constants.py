@@ -1,10 +1,37 @@
+from stactools.testing.test_data import TestData
+import os
+
+EXTERNAL_DATA = {
+    "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc": {
+        "url": (
+            "https://ai4epublictestdata.blob.core.windows.net/"
+            "stactools/esa-cci-lc/"
+            "dataset-satellite-land-cover-6a61fb83-4c35-4ea5-b50c-e43a310a473a.zip"
+        ),
+        "year": 2020
+    },
+    "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds.nc": {
+        "url": (
+            "https://ai4epublictestdata.blob.core.windows.net/"
+            "stactools/esa-cci-lc/"
+            "dataset-satellite-land-cover-fd650584-ea29-4ddc-919c-20f894c09d81.zip"
+        ),
+        "year": 1992
+    },
+}
+
+test_data = TestData(__file__, EXTERNAL_DATA)
+TEST_FILES = []
+for key in EXTERNAL_DATA:
+    data = EXTERNAL_DATA[key]
+    path = test_data.get_external_data(key)
+    TEST_FILES.append({
+        "id": os.path.splitext(path)[0],
+        "path": path,
+        "year": data["year"]
+    })
+
 SRC_FOLDER = "./tests/data-files/"
-TEST_FILES = [
-    "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1",
-    "C3S-LC-L4-LCCS-Map-300m-P1Y-2016-v2.1.1",
-    "ESACCI-LC-L4-LCCS-Map-300m-P1Y-2015-v2.0.7cds",
-    "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds",
-]
 
 # Collection
 TITLE = "ESA Climate Change Initiative Land Cover"

@@ -55,7 +55,9 @@ class CommandsTest(CliTestCase):
 
     @pytest.mark.usefixtures("pass_parameter")
     def test_create_item(self) -> None:
-        for id in constants.TEST_FILES:
+        for key in constants.TEST_FILES:
+            id = constants.TEST_FILES[key]["id"]
+            path = constants.TEST_FILES[key]["path"]
             with self.subTest(id=id):
                 with TemporaryDirectory() as tmp_dir:
                     src_data_filename = f"{id}.nc"
@@ -64,9 +66,7 @@ class CommandsTest(CliTestCase):
                     src_collection = os.path.join(
                         constants.SRC_FOLDER, "collection.json"
                     )
-                    src_data_file = os.path.join(
-                        constants.SRC_FOLDER, src_data_filename
-                    )
+                    src_data_file = path
                     dest_data_file = os.path.join(tmp_dir, src_data_filename)
                     shutil.copyfile(src_data_file, dest_data_file)
 
