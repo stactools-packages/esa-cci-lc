@@ -98,7 +98,6 @@ GEOMETRY = {
 }
 
 # Extensions
-ESA_CCI_LC_EXTENSION = "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json"  # noqa: E501
 CLASSIFICATION_EXTENSION = (
     "https://stac-extensions.github.io/classification/v1.0.0/schema.json"
 )
@@ -106,6 +105,7 @@ DATACUBE_EXTENSION = "https://stac-extensions.github.io/datacube/v2.1.0/schema.j
 PROCESSING_EXTENSION = "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
 # For summaries, until supported: https://github.com/stac-utils/pystac/issues/890
 PROJECTION_EXTENSION = "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+VERSION_EXTENSION = "https://stac-extensions.github.io/version/v1.1.0/schema.json"
 
 # Common
 GSD = 300

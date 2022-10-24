@@ -88,7 +88,6 @@ def create_collection(
     summaries = Summaries(
         {
             "gsd": [constants.GSD],
-            "esa_cci_lc:version": constants.VERSIONS,
             "classification:classes": classification,
             "proj:epsg": [constants.EPSG_CODE],
         },
@@ -98,7 +97,6 @@ def create_collection(
 
     collection = Collection(
         stac_extensions=[
-            constants.ESA_CCI_LC_EXTENSION,
             constants.CLASSIFICATION_EXTENSION,
             # todo: replace with Projection extension from PySTAC
             # https://github.com/stac-utils/pystac/issues/890
@@ -201,13 +199,12 @@ def create_item(
         start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")
         end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
 
-        properties = {"esa_cci_lc:version": dataset.product_version}
+        properties = {}
         if nocog:
             properties["classification:classes"] = classes.to_stac()
 
         item = Item(
             stac_extensions=[
-                constants.ESA_CCI_LC_EXTENSION,
                 constants.CLASSIFICATION_EXTENSION,
             ],
             id=id,
@@ -249,10 +246,13 @@ def create_item(
                 item.add_asset(key, asset)
 
         if not nonetcdf:
-            # todo: replace with DataCube extension from PySTAC
-            item.stac_extensions.append(constants.DATACUBE_EXTENSION)
             asset_dict = netcdf.create_asset(asset_href)
 
+            item.stac_extensions.append(constants.VERSION_EXTENSION)
+            asset_dict["version"] = dataset.product_version
+
+            # todo: replace with DataCube extension from PySTAC
+            item.stac_extensions.append(constants.DATACUBE_EXTENSION)
             asset_dict["cube:dimensions"] = netcdf.to_cube_dimensions(dataset)
             asset_dict["cube:variables"] = netcdf.to_cube_variables(dataset)
 

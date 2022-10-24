@@ -69,7 +69,6 @@
     }
   ],
   "stac_extensions": [
-    "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json",
     "https://stac-extensions.github.io/classification/v1.0.0/schema.json",
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
@@ -495,10 +494,6 @@
   "summaries": {
     "gsd": [
       300
-    ],
-    "esa_cci_lc:version": [
-      "2.0.7cds",
-      "2.1.1"
     ],
     "classification:classes": [
       {

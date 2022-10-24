@@ -13,8 +13,9 @@
   - [datacube](https://github.com/stac-extensions/datacube/)
   - [processing](https://github.com/stac-extensions/processing/)
   - [proj](https://github.com/stac-extensions/projection/)
+  - [version](https://github.com/stac-extensions/version/)
 - Extra fields:
-  - [See the ESA CCI LC extension for details](extension/README.md)
+  - None
 
 A stactools package for ESA's Climate Change Initiative (CCI) Land Cover (LC)
 product.
