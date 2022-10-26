@@ -15,7 +15,7 @@
       "lc-user-tools(2)": "4.5"
     },
     "processing:lineage": "Produced based on the following data sources: Sentinel-3 OLCI",
-    "datetime": "2020-07-01T23:59:59.500000Z"
+    "datetime": null
   },
   "geometry": {
     "type": "Polygon",

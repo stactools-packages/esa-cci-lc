@@ -1,8 +1,7 @@
 import logging
 import os
 import re
-from datetime import datetime
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from dateutil.parser import isoparse
 from netCDF4 import Dataset
@@ -196,10 +195,17 @@ def create_item(
                 "Expected a yearly land cover product, but got different start and end years"
             )
         year = start[0:4]
-        start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")
-        end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
 
-        properties = {}
+        # We can't use datetimes here due to https://github.com/stac-utils/pystac/issues/905
+        # start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")
+        # end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
+        start_datetime = f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z"
+        end_datetime = f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z"
+
+        properties: Dict[str, Any] = {
+            "start_datetime": start_datetime,
+            "end_datetime": end_datetime,
+        }
         if nocog:
             properties["classification:classes"] = classes.to_stac()
 
@@ -211,15 +217,16 @@ def create_item(
             properties=properties,
             geometry=constants.GEOMETRY,
             bbox=constants.BBOX,
-            datetime=center_datetime(start_datetime, end_datetime),
+            datetime=None,
             collection=collection,
         )
 
         common_item = CommonMetadata(item)
         common_item.title = f"Land Cover Map of {year}"
         common_item.gsd = constants.GSD
-        common_item.start_datetime = start_datetime
-        common_item.end_datetime = end_datetime
+        # We can't add it here due to https://github.com/stac-utils/pystac/issues/905
+        # common_item.start_datetime = start_datetime
+        # common_item.end_datetime = end_datetime
 
         proj_attrs = ProjectionExtension.ext(item, add_if_missing=True)
         proj_attrs.epsg = constants.EPSG_CODE
@@ -299,17 +306,3 @@ def parse_software_history(history: str) -> Dict[str, str]:
             software[name] = version
 
     return software
-
-
-def center_datetime(start: datetime, end: datetime) -> datetime:
-    """
-    Takes the start and end datetime and computes the central datetime.
-
-    Args:
-        start (datetime): ISO 8601 compliant date-time
-        end (datetime): ISO 8601 compliant date-time
-
-    Returns:
-        datetime: ISO 8601 compliant date-time
-    """
-    return start + (end - start) / 2
