@@ -34,20 +34,22 @@ def create_collection(
     start_time: Optional[str] = None,
     end_time: Optional[str] = None,
 ) -> Collection:
-    """Create a STAC Collection for NOAA MRMS QPE sub-products.
+    """Create a STAC Collection for ESA CCI data.
 
     Args:
         id (str): A custom collection ID, defaults to 'esa-cci-lc'
         thumbnail (str): URL for the PNG or JPEG collection thumbnail asset (none if empty)
-        nocog (bool): If set to True, the collections does not include the
+        nocog (bool): If set to True, the collection does not include the
             COG-related metadata
-        nonetcdf (bool): If set to True, the collections does not include the
+        nonetcdf (bool): If set to True, the collection does not include the
             netCDF-related metadata
-        start_time (str): The start timestamp for the temporal extent, default to now.
-            Timestamps consist of a date and time in UTC and must follow RFC 3339, section 5.6.
-        end_time (str): The end timestamp for the temporal extent, default to now.
-            Timestamps consist of a date and time in UTC and must follow RFC 3339, section 5.6.
-            To specify an open-ended temporal extent, set this option to 'open-ended'.
+        start_time (str): The start timestamp for the temporal extent, defaults
+            to ``constants.START_DATETIME``.  Timestamps consist of a date and time
+            in UTC and must follow RFC 3339, section 5.6.
+        end_time (str): The end timestamp for the temporal extent, default to
+            ``constants.END_DATETIME``.  Timestamps consist of a date and time in
+            UTC and must follow RFC 3339, section 5.6.  To specify an open-ended
+            temporal extent, set this option to 'open-ended'.
 
     Returns:
         Collection: STAC Collection object
@@ -161,11 +163,6 @@ def create_item(
     nonetcdf: bool = False,
 ) -> Item:
     """Create a STAC Item
-
-    This function should include logic to extract all relevant metadata from an
-    asset, metadata asset, and/or a constants.py file.
-
-    See `Item<https://pystac.readthedocs.io/en/latest/api.html#item>`_.
 
     Args:
         asset_href (str): The HREF pointing to an asset associated with the item
