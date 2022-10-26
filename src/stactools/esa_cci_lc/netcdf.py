@@ -77,7 +77,7 @@ def create_asset(href: Optional[str] = None) -> Dict[str, Any]:
     """
     Creates a basic netCDF asset dict with shared properties (title, type, roles)
     and optionally an href. An href should be given for normal assets, but can
-    be None for Item Asset Definitionss
+    be None for Item Asset Definitions
 
     Args:
         href (str): The URL to an asset (optional)
