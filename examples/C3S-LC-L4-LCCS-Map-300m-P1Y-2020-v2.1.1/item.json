@@ -1,22 +1,20 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds",
+  "id": "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1",
   "properties": {
-    "title": "Land Cover Map of 1992",
+    "title": "Land Cover Map of 2020",
     "gsd": 300,
-    "start_datetime": "1992-01-01T00:00:00Z",
-    "end_datetime": "1992-12-31T23:59:59Z",
+    "start_datetime": "2020-01-01T00:00:00Z",
+    "end_datetime": "2020-12-31T23:59:59Z",
     "proj:epsg": 4326,
     "processing:software": {
-      "amorgos": "4,0",
-      "lc-sdr": "1.0",
       "lc-sr": "1.0",
       "lc-classification": "1.0",
-      "lc-user-tools(1)": "3.13",
-      "lc-user-tools(2)": "4.3"
+      "lc-user-tools(1)": "3.14",
+      "lc-user-tools(2)": "4.5"
     },
-    "processing:lineage": "Produced based on the following data sources: MERIS FR L1B version 5.05, MERIS RR L1B version 8.0, SPOT VGT P",
+    "processing:lineage": "Produced based on the following data sources: Sentinel-3 OLCI",
     "datetime": null
   },
   "geometry": {
@@ -49,7 +47,7 @@
   "links": [
     {
       "rel": "collection",
-      "href": "/mnt/c/Projects/esa-cci-lc/examples/collection.json",
+      "href": "../collection.json",
       "type": "application/json",
       "title": "ESA Climate Change Initiative Land Cover"
     }
@@ -306,7 +304,7 @@
           "color_hint": "FFFFFF"
         }
       ],
-      "created": "2022-09-30T11:39:53.751396Z",
+      "created": "2022-09-30T10:58:11.160376Z",
       "proj:shape": [
         129600,
         64800
@@ -329,6 +327,7 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "LC map processed area flag",
       "description": "Flag to mark areas that could not be classified.",
+      "version": "2.1.1",
       "classification:classes": [
         {
           "value": 0,
@@ -341,7 +340,7 @@
           "description": "Processed"
         }
       ],
-      "created": "2022-09-30T11:42:19.701847Z",
+      "created": "2022-09-30T11:00:33.967418Z",
       "proj:shape": [
         129600,
         64800
@@ -396,7 +395,7 @@
           "description": "Filled"
         }
       ],
-      "created": "2022-09-30T11:45:14.790327Z",
+      "created": "2022-09-30T11:03:25.232575Z",
       "proj:shape": [
         129600,
         64800
@@ -419,7 +418,7 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of valid observations",
       "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!",
-      "created": "2022-09-30T11:57:42.435988Z",
+      "created": "2022-09-30T11:15:55.524294Z",
       "proj:shape": [
         129600,
         64800
@@ -442,7 +441,7 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of class changes",
       "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
-      "created": "2022-09-30T12:00:03.671412Z",
+      "created": "2022-09-30T11:18:54.417065Z",
       "proj:shape": [
         129600,
         64800
@@ -461,10 +460,10 @@
       ]
     },
     "netcdf": {
-      "href": "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds.nc",
+      "href": "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc",
       "type": "application/netcdf",
       "title": "Original netCDF 4 file",
-      "version": "2.0.7cds",
+      "version": "2.1.1",
       "cube:dimensions": {
         "lat": {
           "type": "lat",
@@ -483,7 +482,7 @@
         "time": {
           "type": "time",
           "values": [
-            8035.0
+            18262.0
           ]
         },
         "bounds": {
@@ -593,7 +592,7 @@
           "axis": "T"
         }
       },
-      "created": "2018-11-30T09:54:51Z",
+      "created": "2021-05-18T10:15:40Z",
       "proj:shape": [
         129600,
         64800

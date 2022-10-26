@@ -111,7 +111,7 @@ def create_collection(
         providers=constants.PROVIDERS,
         extent=extent,
         summaries=summaries,
-        catalog_type=CatalogType.RELATIVE_PUBLISHED,
+        catalog_type=CatalogType.SELF_CONTAINED,
     )
 
     collection.add_link(constants.LINK_LICENSE_ESA)
