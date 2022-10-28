@@ -20,7 +20,7 @@ class CommandsTest(CliTestCase):
 
     def test_create_collection(self) -> None:
         with TemporaryDirectory() as tmp_dir:
-            src_file = os.path.join(constants.SRC_FOLDER, "collection.json")
+            src_file = os.path.join(constants.TRUTH_FOLDER, "collection.json")
             destination = os.path.join(tmp_dir, "collection.json")
 
             result = self.run_command(
@@ -62,7 +62,7 @@ class CommandsTest(CliTestCase):
                     stac_filename = f"{id}.json"
 
                     src_collection = os.path.join(
-                        constants.SRC_FOLDER, "collection.json"
+                        constants.TRUTH_FOLDER, "collection.json"
                     )
                     src_data_file = os.path.join(
                         constants.SRC_FOLDER, src_data_filename
@@ -70,7 +70,7 @@ class CommandsTest(CliTestCase):
                     dest_data_file = os.path.join(tmp_dir, src_data_filename)
                     shutil.copyfile(src_data_file, dest_data_file)
 
-                    src_stac = os.path.join(constants.SRC_FOLDER, stac_filename)
+                    src_stac = os.path.join(constants.TRUTH_FOLDER, stac_filename)
                     dest_stac = os.path.join(tmp_dir, stac_filename)
 
                     cmd = (
@@ -103,6 +103,11 @@ class CommandsTest(CliTestCase):
                     else:
                         for key in constants.DATA_VARIABLES:
                             del truth_item["assets"][key]
+                        for i in range(len(truth_item["stac_extensions"])):
+                            ext = truth_item["stac_extensions"][i]
+                            if "/raster/" in ext:
+                                del truth_item["stac_extensions"][i]
+                                break
 
                     diff = DeepDiff(
                         item,
