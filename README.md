@@ -13,6 +13,7 @@
   - [datacube](https://github.com/stac-extensions/datacube/)
   - [processing](https://github.com/stac-extensions/processing/)
   - [proj](https://github.com/stac-extensions/projection/)
+  - [raster](https://github.com/stac-extensions/raster/)
   - [version](https://github.com/stac-extensions/version/)
 - Extra fields:
   - None

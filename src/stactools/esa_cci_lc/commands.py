@@ -99,12 +99,20 @@ def create_esaccilc_command(cli: Group) -> Command:
         default=False,
         help="Does not include the netCDF file in the created metadata if set to `TRUE`.",
     )
+    @click.option(
+        "--ovr_class_resampling",
+        default="mode",
+        help="Resampling method for the COG overviews of the classes (lccs_class). "
+        "Defaults to `mode`, which is slower but better suited for categorical data. "
+        "Use `nearest` for a faster alternative.",
+    )
     def create_item_command(
         source: str,
         destination: str,
         collection: str = "",
         nocog: bool = False,
         nonetcdf: bool = False,
+        ovr_class_resampling: str = "mode",
     ) -> None:
         """Creates a STAC Item
 
@@ -116,7 +124,9 @@ def create_esaccilc_command(cli: Group) -> Command:
         if len(collection) > 0:
             stac_collection = Collection.from_file(collection)
 
-        item = stac.create_item(source, stac_collection, nocog, nonetcdf)
+        item = stac.create_item(
+            source, stac_collection, nocog, nonetcdf, ovr_class_resampling
+        )
         item.save_object(dest_href=destination)
 
         return None

@@ -71,6 +71,7 @@
   "stac_extensions": [
     "https://stac-extensions.github.io/classification/v1.0.0/schema.json",
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
     "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
     "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
   ],
@@ -82,7 +83,13 @@
         "quality",
         "cloud-optimized"
       ],
-      "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes."
+      "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ]
     },
     "current_pixel_state": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
@@ -121,6 +128,12 @@
           "value": 6,
           "name": "filled",
           "description": "Filled"
+        }
+      ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
         }
       ]
     },
@@ -376,6 +389,13 @@
           "description": "Permanent snow and ice",
           "color_hint": "FFFFFF"
         }
+      ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area",
+          "nodata": 0
+        }
       ]
     },
     "observation_count": {
@@ -384,7 +404,13 @@
         "quality",
         "cloud-optimized"
       ],
-      "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!"
+      "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ]
     },
     "processed_flag": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
@@ -403,6 +429,12 @@
           "value": 1,
           "name": "processed",
           "description": "Processed"
+        }
+      ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
         }
       ]
     },
@@ -492,9 +524,6 @@
     }
   ],
   "summaries": {
-    "gsd": [
-      300
-    ],
     "classification:classes": [
       {
         "value": 0,

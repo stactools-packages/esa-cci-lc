@@ -88,7 +88,6 @@ def create_collection(
     classification = classes.to_stac()
     summaries = Summaries(
         {
-            "gsd": [constants.GSD],
             "classification:classes": classification,
             "proj:epsg": [constants.EPSG_CODE],
         },
@@ -96,13 +95,17 @@ def create_collection(
         maxcount=len(classification) + 1,
     )
 
+    # todo: replace with Projection and raster extension from PySTAC
+    # https://github.com/stac-utils/pystac/issues/890
+    extensions = [
+        constants.CLASSIFICATION_EXTENSION,
+        constants.PROJECTION_EXTENSION,
+    ]
+    if not nocog:
+        extensions.append(constants.RASTER_EXTENSION)
+
     collection = Collection(
-        stac_extensions=[
-            constants.CLASSIFICATION_EXTENSION,
-            # todo: replace with Projection extension from PySTAC
-            # https://github.com/stac-utils/pystac/issues/890
-            constants.PROJECTION_EXTENSION,
-        ],
+        stac_extensions=extensions,
         id=id,
         title=constants.TITLE,
         description=constants.DESCRIPTION,
@@ -161,6 +164,7 @@ def create_item(
     collection: Optional[Collection] = None,
     nocog: bool = False,
     nonetcdf: bool = False,
+    ovr_class_resampling: str = "mode",
 ) -> Item:
     """Create a STAC Item
 
@@ -169,6 +173,7 @@ def create_item(
         collection (pystac.Collection): HREF to an existing collection
         nocog (bool): If set to True, no COG file is generated for the Item
         nonetcdf (bool): If set to True, the netCDF file is not added to the Item
+        ovr_class_resampling (str): Resampling method for the COG overviews of the classes.
 
     Returns:
         Item: STAC Item object
@@ -206,10 +211,16 @@ def create_item(
         if nocog:
             properties["classification:classes"] = classes.to_stac()
 
+        extensions = [
+            constants.CLASSIFICATION_EXTENSION,
+        ]
+        # todo: replace with raster extension from PySTAC
+        # https://github.com/stac-utils/pystac/issues/890
+        if not nocog:
+            extensions.append(constants.RASTER_EXTENSION)
+
         item = Item(
-            stac_extensions=[
-                constants.CLASSIFICATION_EXTENSION,
-            ],
+            stac_extensions=extensions,
             id=id,
             properties=properties,
             geometry=constants.GEOMETRY,
@@ -220,7 +231,6 @@ def create_item(
 
         common_item = CommonMetadata(item)
         common_item.title = f"Land Cover Map of {year}"
-        common_item.gsd = constants.GSD
         # We can't add it here due to https://github.com/stac-utils/pystac/issues/905
         # common_item.start_datetime = start_datetime
         # common_item.end_datetime = end_datetime
@@ -246,7 +256,9 @@ def create_item(
                 if not netcdf.is_data_variable(var):
                     continue
 
-                asset = cog.create_from_var(asset_href, dest_folder, dataset, var)
+                asset = cog.create_from_var(
+                    asset_href, dest_folder, dataset, var, ovr_class_resampling
+                )
                 item.add_asset(key, asset)
 
         if not nonetcdf:

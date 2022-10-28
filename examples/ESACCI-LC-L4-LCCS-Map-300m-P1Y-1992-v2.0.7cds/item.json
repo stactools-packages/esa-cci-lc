@@ -3,10 +3,9 @@
   "stac_version": "1.0.0",
   "id": "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds",
   "properties": {
-    "title": "Land Cover Map of 1992",
-    "gsd": 300,
     "start_datetime": "1992-01-01T00:00:00Z",
     "end_datetime": "1992-12-31T23:59:59Z",
+    "title": "Land Cover Map of 1992",
     "proj:epsg": 4326,
     "processing:software": {
       "amorgos": "4,0",
@@ -306,6 +305,13 @@
           "color_hint": "FFFFFF"
         }
       ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area",
+          "nodata": 0
+        }
+      ],
       "created": "2022-09-30T11:39:53.751396Z",
       "proj:shape": [
         129600,
@@ -339,6 +345,12 @@
           "value": 1,
           "name": "processed",
           "description": "Processed"
+        }
+      ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
         }
       ],
       "created": "2022-09-30T11:42:19.701847Z",
@@ -396,6 +408,12 @@
           "description": "Filled"
         }
       ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ],
       "created": "2022-09-30T11:45:14.790327Z",
       "proj:shape": [
         129600,
@@ -419,6 +437,12 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of valid observations",
       "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ],
       "created": "2022-09-30T11:57:42.435988Z",
       "proj:shape": [
         129600,
@@ -442,6 +466,12 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of class changes",
       "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ],
       "created": "2022-09-30T12:00:03.671412Z",
       "proj:shape": [
         129600,
@@ -621,6 +651,7 @@
   ],
   "stac_extensions": [
     "https://stac-extensions.github.io/classification/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/processing/v1.1.0/schema.json",
     "https://stac-extensions.github.io/version/v1.1.0/schema.json",

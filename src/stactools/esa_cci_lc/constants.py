@@ -105,13 +105,18 @@ DATACUBE_EXTENSION = "https://stac-extensions.github.io/datacube/v2.1.0/schema.j
 PROCESSING_EXTENSION = "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
 # For summaries, until supported: https://github.com/stac-utils/pystac/issues/890
 PROJECTION_EXTENSION = "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+# For item asset definitions, until supported: https://github.com/stac-utils/pystac/issues/890
+RASTER_EXTENSION = "https://stac-extensions.github.io/raster/v1.1.0/schema.json"
 VERSION_EXTENSION = "https://stac-extensions.github.io/version/v1.1.0/schema.json"
 
 # Common
-GSD = 300
 V1 = "2.0.7cds"
 V2 = "2.1.1"
 VERSIONS = [V1, V2]
+
+# Raster
+RESOLUTION = 300
+SAMPLING = "area"
 
 # Projection
 EPSG_CODE = 4326
