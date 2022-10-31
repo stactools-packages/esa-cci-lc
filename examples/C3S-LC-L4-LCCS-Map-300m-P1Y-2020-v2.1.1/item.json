@@ -3,11 +3,9 @@
   "stac_version": "1.0.0",
   "id": "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1",
   "properties": {
-    "esa_cci_lc:version": "2.1.1",
-    "title": "Land Cover Map of 2020",
-    "gsd": 300,
     "start_datetime": "2020-01-01T00:00:00Z",
     "end_datetime": "2020-12-31T23:59:59Z",
+    "title": "Land Cover Map of 2020",
     "proj:epsg": 4326,
     "processing:software": {
       "lc-sr": "1.0",
@@ -16,7 +14,7 @@
       "lc-user-tools(2)": "4.5"
     },
     "processing:lineage": "Produced based on the following data sources: Sentinel-3 OLCI",
-    "datetime": "2020-07-01T23:59:59.500000Z"
+    "datetime": null
   },
   "geometry": {
     "type": "Polygon",
@@ -48,7 +46,7 @@
   "links": [
     {
       "rel": "collection",
-      "href": "./collection.json",
+      "href": "../collection.json",
       "type": "application/json",
       "title": "ESA Climate Change Initiative Land Cover"
     }
@@ -305,6 +303,13 @@
           "color_hint": "FFFFFF"
         }
       ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area",
+          "nodata": 0
+        }
+      ],
       "created": "2022-09-30T10:58:11.160376Z",
       "proj:shape": [
         129600,
@@ -338,6 +343,12 @@
           "value": 1,
           "name": "processed",
           "description": "Processed"
+        }
+      ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
         }
       ],
       "created": "2022-09-30T11:00:33.967418Z",
@@ -395,6 +406,12 @@
           "description": "Filled"
         }
       ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ],
       "created": "2022-09-30T11:03:25.232575Z",
       "proj:shape": [
         129600,
@@ -418,6 +435,12 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of valid observations",
       "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ],
       "created": "2022-09-30T11:15:55.524294Z",
       "proj:shape": [
         129600,
@@ -441,6 +464,12 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Number of class changes",
       "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area"
+        }
+      ],
       "created": "2022-09-30T11:18:54.417065Z",
       "proj:shape": [
         129600,
@@ -463,6 +492,7 @@
       "href": "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc",
       "type": "application/netcdf",
       "title": "Original netCDF 4 file",
+      "version": "2.1.1",
       "cube:dimensions": {
         "lat": {
           "type": "lat",
@@ -618,10 +648,11 @@
     90.0
   ],
   "stac_extensions": [
-    "https://raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/extension/schema.json",
     "https://stac-extensions.github.io/classification/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/processing/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/version/v1.1.0/schema.json",
     "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"
   ],
   "collection": "esa-cci-lc"

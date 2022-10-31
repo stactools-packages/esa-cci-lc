@@ -77,7 +77,7 @@ def create_asset(href: Optional[str] = None) -> Dict[str, Any]:
     """
     Creates a basic netCDF asset dict with shared properties (title, type, roles)
     and optionally an href. An href should be given for normal assets, but can
-    be None for Item Asset Definitionss
+    be None for Item Asset Definitions
 
     Args:
         href (str): The URL to an asset (optional)
@@ -96,6 +96,15 @@ def create_asset(href: Optional[str] = None) -> Dict[str, Any]:
 
 
 def is_data_variable(var: Variable) -> bool:
+    """
+    Checks whether a variable contains "data" or "metadata"
+
+    Args:
+        dataset (Variable): A netCDF4 Variable
+
+    Returns:
+        bool: True for data, False for metadata
+    """
     # if "lat" in var.dimensions and "lon" in var.dimensions and "time" in var.dimensions:
     if var.name in constants.DATA_VARIABLES:
         return True
@@ -104,6 +113,16 @@ def is_data_variable(var: Variable) -> bool:
 
 
 def parse_transform(dataset: Dataset) -> Optional[List[float]]:
+    """
+    Gets the geotransform from the netcdf file and converts it into the
+    format required for STAC (proj:transform).
+
+    Args:
+        dataset (Dataset): A netCDF4 Variable
+
+    Returns:
+        Optional[List[float]]: List of 6 numbers, or None if no geotransform is available
+    """
     crs_var = dataset.variables["crs"]
     if "i2m" in crs_var.ncattrs():
         i2m = crs_var.getncattr("i2m")

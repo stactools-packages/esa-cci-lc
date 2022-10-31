@@ -1,8 +1,7 @@
 import logging
 import os
 import re
-from datetime import datetime
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from dateutil.parser import isoparse
 from netCDF4 import Dataset
@@ -35,20 +34,22 @@ def create_collection(
     start_time: Optional[str] = None,
     end_time: Optional[str] = None,
 ) -> Collection:
-    """Create a STAC Collection for NOAA MRMS QPE sub-products.
+    """Create a STAC Collection for ESA CCI data.
 
     Args:
         id (str): A custom collection ID, defaults to 'esa-cci-lc'
         thumbnail (str): URL for the PNG or JPEG collection thumbnail asset (none if empty)
-        nocog (bool): If set to True, the collections does not include the
+        nocog (bool): If set to True, the collection does not include the
             COG-related metadata
-        nonetcdf (bool): If set to True, the collections does not include the
+        nonetcdf (bool): If set to True, the collection does not include the
             netCDF-related metadata
-        start_time (str): The start timestamp for the temporal extent, default to now.
-            Timestamps consist of a date and time in UTC and must follow RFC 3339, section 5.6.
-        end_time (str): The end timestamp for the temporal extent, default to now.
-            Timestamps consist of a date and time in UTC and must follow RFC 3339, section 5.6.
-            To specify an open-ended temporal extent, set this option to 'open-ended'.
+        start_time (str): The start timestamp for the temporal extent, defaults
+            to ``constants.START_DATETIME``.  Timestamps consist of a date and time
+            in UTC and must follow RFC 3339, section 5.6.
+        end_time (str): The end timestamp for the temporal extent, default to
+            ``constants.END_DATETIME``.  Timestamps consist of a date and time in
+            UTC and must follow RFC 3339, section 5.6.  To specify an open-ended
+            temporal extent, set this option to 'open-ended'.
 
     Returns:
         Collection: STAC Collection object
@@ -87,8 +88,6 @@ def create_collection(
     classification = classes.to_stac()
     summaries = Summaries(
         {
-            "gsd": [constants.GSD],
-            "esa_cci_lc:version": constants.VERSIONS,
             "classification:classes": classification,
             "proj:epsg": [constants.EPSG_CODE],
         },
@@ -96,14 +95,17 @@ def create_collection(
         maxcount=len(classification) + 1,
     )
 
+    # todo: replace with Projection and raster extension from PySTAC
+    # https://github.com/stac-utils/pystac/issues/890
+    extensions = [
+        constants.CLASSIFICATION_EXTENSION,
+        constants.PROJECTION_EXTENSION,
+    ]
+    if not nocog:
+        extensions.append(constants.RASTER_EXTENSION)
+
     collection = Collection(
-        stac_extensions=[
-            constants.ESA_CCI_LC_EXTENSION,
-            constants.CLASSIFICATION_EXTENSION,
-            # todo: replace with Projection extension from PySTAC
-            # https://github.com/stac-utils/pystac/issues/890
-            constants.PROJECTION_EXTENSION,
-        ],
+        stac_extensions=extensions,
         id=id,
         title=constants.TITLE,
         description=constants.DESCRIPTION,
@@ -112,7 +114,7 @@ def create_collection(
         providers=constants.PROVIDERS,
         extent=extent,
         summaries=summaries,
-        catalog_type=CatalogType.RELATIVE_PUBLISHED,
+        catalog_type=CatalogType.SELF_CONTAINED,
     )
 
     collection.add_link(constants.LINK_LICENSE_ESA)
@@ -162,19 +164,16 @@ def create_item(
     collection: Optional[Collection] = None,
     nocog: bool = False,
     nonetcdf: bool = False,
+    ovr_class_resampling: str = "mode",
 ) -> Item:
     """Create a STAC Item
-
-    This function should include logic to extract all relevant metadata from an
-    asset, metadata asset, and/or a constants.py file.
-
-    See `Item<https://pystac.readthedocs.io/en/latest/api.html#item>`_.
 
     Args:
         asset_href (str): The HREF pointing to an asset associated with the item
         collection (pystac.Collection): HREF to an existing collection
         nocog (bool): If set to True, no COG file is generated for the Item
         nonetcdf (bool): If set to True, the netCDF file is not added to the Item
+        ovr_class_resampling (str): Resampling method for the COG overviews of the classes.
 
     Returns:
         Item: STAC Item object
@@ -198,31 +197,43 @@ def create_item(
                 "Expected a yearly land cover product, but got different start and end years"
             )
         year = start[0:4]
-        start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")
-        end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
 
-        properties = {"esa_cci_lc:version": dataset.product_version}
+        # We can't use datetimes here due to https://github.com/stac-utils/pystac/issues/905
+        # start_datetime = isoparse(f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z")
+        # end_datetime = isoparse(f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z")
+        start_datetime = f"{start[0:4]}-{start[4:6]}-{start[6:8]}T00:00:00Z"
+        end_datetime = f"{end[0:4]}-{end[4:6]}-{end[6:8]}T23:59:59Z"
+
+        properties: Dict[str, Any] = {
+            "start_datetime": start_datetime,
+            "end_datetime": end_datetime,
+        }
         if nocog:
             properties["classification:classes"] = classes.to_stac()
 
+        extensions = [
+            constants.CLASSIFICATION_EXTENSION,
+        ]
+        # todo: replace with raster extension from PySTAC
+        # https://github.com/stac-utils/pystac/issues/890
+        if not nocog:
+            extensions.append(constants.RASTER_EXTENSION)
+
         item = Item(
-            stac_extensions=[
-                constants.ESA_CCI_LC_EXTENSION,
-                constants.CLASSIFICATION_EXTENSION,
-            ],
+            stac_extensions=extensions,
             id=id,
             properties=properties,
             geometry=constants.GEOMETRY,
             bbox=constants.BBOX,
-            datetime=center_datetime(start_datetime, end_datetime),
+            datetime=None,
             collection=collection,
         )
 
         common_item = CommonMetadata(item)
         common_item.title = f"Land Cover Map of {year}"
-        common_item.gsd = constants.GSD
-        common_item.start_datetime = start_datetime
-        common_item.end_datetime = end_datetime
+        # We can't add it here due to https://github.com/stac-utils/pystac/issues/905
+        # common_item.start_datetime = start_datetime
+        # common_item.end_datetime = end_datetime
 
         proj_attrs = ProjectionExtension.ext(item, add_if_missing=True)
         proj_attrs.epsg = constants.EPSG_CODE
@@ -245,14 +256,19 @@ def create_item(
                 if not netcdf.is_data_variable(var):
                     continue
 
-                asset = cog.create_from_var(asset_href, dest_folder, dataset, var)
+                asset = cog.create_from_var(
+                    asset_href, dest_folder, dataset, var, ovr_class_resampling
+                )
                 item.add_asset(key, asset)
 
         if not nonetcdf:
-            # todo: replace with DataCube extension from PySTAC
-            item.stac_extensions.append(constants.DATACUBE_EXTENSION)
             asset_dict = netcdf.create_asset(asset_href)
 
+            item.stac_extensions.append(constants.VERSION_EXTENSION)
+            asset_dict["version"] = dataset.product_version
+
+            # todo: replace with DataCube extension from PySTAC
+            item.stac_extensions.append(constants.DATACUBE_EXTENSION)
             asset_dict["cube:dimensions"] = netcdf.to_cube_dimensions(dataset)
             asset_dict["cube:variables"] = netcdf.to_cube_variables(dataset)
 
@@ -299,17 +315,3 @@ def parse_software_history(history: str) -> Dict[str, str]:
             software[name] = version
 
     return software
-
-
-def center_datetime(start: datetime, end: datetime) -> datetime:
-    """
-    Takes the start and end datetime and computes the central datetime.
-
-    Args:
-        start (datetime): ISO 8601 compliant date-time
-        end (datetime): ISO 8601 compliant date-time
-
-    Returns:
-        datetime: ISO 8601 compliant date-time
-    """
-    return start + (end - start) / 2

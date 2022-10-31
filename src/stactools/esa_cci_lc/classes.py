@@ -1,6 +1,6 @@
 # fmt: off
 # flake8: noqa
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 # Value, RGB, Name, Description, Regional (def: False), Nodata (def: False)
 
@@ -62,6 +62,23 @@ CURRENT_PIXEL_STATE_TABLE: List[List[Any]] = [
 ]
 
 def to_stac(data: List[List[Any]] = TABLE, incldue_regional: bool = True) -> List[Dict[str, Any]]:
+  """
+  Takes one of the internal tables and converts them to a STAC Class Object (Classification ext.)
+  The internal tables are 2D arrays where the inner array has the following structure:
+  1. Value (int)
+  2. RGB (List[int] or None)
+  3. Name (string, for machines)
+  4. Description (string, for humans)
+  5. Is regional? (bool, default: False)
+  6. Is nodata value? (bool, default: False)
+
+  Args:
+      data (List[List[Any]]): A table to convert to STAC
+      incldue_regional (bool): Set to False to exclude regional classes
+
+  Returns:
+      dict: Basic Asset object
+  """
   stac_classes: List[Dict[str, Any]] = []
   for cls in data:
     regional = False

@@ -1,6 +1,8 @@
 from stactools.testing.test_data import TestData
 import os
 
+SRC_FOLDER = "./tests/data-files/external/"
+TRUTH_FOLDER = "./tests/data-files/"
 EXTERNAL_DATA = {
     "C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc": {
         "url": (
@@ -46,10 +48,13 @@ GEOMETRY = {
 }
 
 # Common
-GSD = 300
 V1 = "2.0.7cds"
 V2 = "2.1.1"
 VERSIONS = [V1, V2]
+
+# Raster
+RESOLUTION = 300
+SAMPLING = "area"
 
 # Projection
 EPSG_CODE = 4326

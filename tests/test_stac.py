@@ -76,8 +76,6 @@ class StacTest(unittest.TestCase):
 
                 self.assertTrue("summaries" in collection_dict)
                 summaries = collection_dict["summaries"]
-                self.assertEqual(summaries["gsd"], [constants.GSD])
-                self.assertEqual(summaries["esa_cci_lc:version"], constants.VERSIONS)
                 self.assertIn("classification:classes", summaries)
                 self.assertEqual(summaries["proj:epsg"], [constants.EPSG_CODE])
 
@@ -107,6 +105,14 @@ class StacTest(unittest.TestCase):
                         self.assertEqual(
                             "classification:classes" in asset, key in constants.TABLES
                         )
+                        self.assertIn("raster:bands", asset)
+                        self.assertEqual(len(asset["raster:bands"]), 1)
+                        band = asset["raster:bands"][0]
+                        self.assertEqual(
+                            band["spatial_resolution"], constants.RESOLUTION
+                        )
+                        self.assertEqual(band["sampling"], constants.SAMPLING)
+                        self.assertEqual("nodata" in band, key == "lccs_class")
 
                 # Check netCDF asset
                 self.assertEqual(constants.NETCDF_KEY in assets, not nonetcdf)
@@ -121,6 +127,7 @@ class StacTest(unittest.TestCase):
     @pytest.mark.usefixtures("pass_parameter")
     def test_create_item(self) -> None:
         for test_data in TEST_ITEMS:
+
             with self.subTest(test_data=test_data):
                 id: str = test_data["id"]
                 year: int = test_data["year"]
@@ -138,9 +145,15 @@ class StacTest(unittest.TestCase):
                 if "collection" in test_data:
                     collection = Collection.from_file(test_data["collection"])
 
+                src_data_file = os.path.join(constants.SRC_FOLDER, f"{id}.nc")
+                if not os.path.exists(src_data_file):
+                    pytest.skip(
+                        f"Data file {src_data_file} not available for test, skipping"
+                    )
+                    continue
+
                 item: Optional[Item] = None
                 with TemporaryDirectory() as tmp_dir:
-                    src_data_file = os.path.join("./tests/data-files/", f"{id}.nc")
                     dest_data_file = os.path.join(tmp_dir, f"{id}.nc")
                     shutil.copyfile(src_data_file, dest_data_file)
 
@@ -169,12 +182,9 @@ class StacTest(unittest.TestCase):
                     item.properties["end_datetime"], f"{year}-12-31T23:59:59Z"
                 )
                 self.assertEqual(item.properties["title"], f"Land Cover Map of {year}")
-                self.assertIn(item.properties["esa_cci_lc:version"], constants.VERSIONS)
-                self.assertTrue(id.endswith(item.properties["esa_cci_lc:version"]))
                 self.assertEqual(
                     "classification:classes" in item.properties, test_data["nocog"]
                 )
-                self.assertEqual(item.properties["gsd"], constants.GSD)
                 self.assertEqual(item.properties["proj:epsg"], 4326)
                 self.assertIn("processing:software", item.properties)
                 self.assertIn("processing:lineage", item.properties)
@@ -224,3 +234,7 @@ class StacTest(unittest.TestCase):
                     self.assertEqual(len(asset["proj:shape"]), 2)
                     self.assertEqual(len(asset["proj:transform"]), 6)
                     self.assertNotIn("classification:classes", asset)
+                    self.assertIn("version", asset)
+                    version_truth = constants.V1 if year < 2016 else constants.V2
+                    self.assertEqual(asset["version"], version_truth)
+                    self.assertTrue(id.endswith(asset["version"]))
