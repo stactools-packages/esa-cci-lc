@@ -28,12 +28,10 @@ for key in EXTERNAL_DATA:
     data = EXTERNAL_DATA[key]
     path = test_data.get_external_data(key)
     TEST_FILES.append({
-        "id": os.path.splitext(path)[0],
+        "id": os.path.splitext(os.path.basename(path))[0],
         "path": path,
         "year": data["year"]
     })
-
-SRC_FOLDER = "./tests/data-files/"
 
 # Collection
 TITLE = "ESA Climate Change Initiative Land Cover"

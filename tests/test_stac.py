@@ -127,7 +127,6 @@ class StacTest(unittest.TestCase):
     @pytest.mark.usefixtures("pass_parameter")
     def test_create_item(self) -> None:
         for test_data in TEST_ITEMS:
-
             with self.subTest(test_data=test_data):
                 id: str = test_data["id"]
                 year: int = test_data["year"]

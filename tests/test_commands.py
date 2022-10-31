@@ -55,15 +55,13 @@ class CommandsTest(CliTestCase):
 
     @pytest.mark.usefixtures("pass_parameter")
     def test_create_item(self) -> None:
-        for key in constants.TEST_FILES:
-            id = constants.TEST_FILES[key]["id"]
-            path = constants.TEST_FILES[key]["path"]
+        for file in constants.TEST_FILES:
+            id = file["id"]
+            path = file["path"]
             with self.subTest(id=id):
-                src_data_filename = f"{id}.nc"
-                src_data_file = os.path.join(constants.SRC_FOLDER, src_data_filename)
-                if not os.path.exists(src_data_file):
+                if not os.path.exists(path):
                     pytest.skip(
-                        f"Data file {src_data_file} not available for test, skipping"
+                        f"Data file {path} not available for test, skipping"
                     )
                     continue
 
@@ -72,8 +70,9 @@ class CommandsTest(CliTestCase):
                     src_collection = os.path.join(
                         constants.TRUTH_FOLDER, "collection.json"
                     )
+                    src_data_filename = f"{id}.nc"
                     dest_data_file = os.path.join(tmp_dir, src_data_filename)
-                    shutil.copyfile(src_data_file, dest_data_file)
+                    shutil.copyfile(path, dest_data_file)
 
                     src_stac = os.path.join(constants.TRUTH_FOLDER, stac_filename)
                     dest_stac = os.path.join(tmp_dir, stac_filename)
