@@ -106,6 +106,16 @@ To run the tests:
 pytest -vv
 ```
 
-**Note:** Due to the long processing time of the tests with COGs conversion (in total 3-4 hours on 
+### Tests
+
+Due to the large file sizes the data files for the tests are missing in this repository.
+To run the tests, please download the files for 1992, 2015, 2016 and 2020 from the
+[Climate Data Store](https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-land-cover?tab=form).
+You can download them all at once in a ZIP or gzipped TAR file and then extract the `.nc` files
+to the `tests/data-files/external` folder.
+
+Due to the missing data, the CI doesn't run any tests for item generation!
+
+Also, due to the long processing time of the tests with COGs conversion (in total 3-4 hours on 
 my local machine), the tests by default run without COG processing (i.e. `--nocog` is enabled).
 To run the tests with COG generation, please run `pytest -vv --withcog`.

@@ -137,6 +137,7 @@ class StacTest(unittest.TestCase):
     @pytest.mark.usefixtures("pass_parameter")
     def test_create_item(self) -> None:
         for test_data in TEST_ITEMS:
+
             with self.subTest(test_data=test_data):
                 id: str = test_data["id"]
                 year: int = test_data["year"]
@@ -154,9 +155,15 @@ class StacTest(unittest.TestCase):
                 if "collection" in test_data:
                     collection = Collection.from_file(test_data["collection"])
 
+                src_data_file = os.path.join(constants.SRC_FOLDER, f"{id}.nc")
+                if not os.path.exists(src_data_file):
+                    pytest.skip(
+                        f"Data file {src_data_file} not available for test, skipping"
+                    )
+                    continue
+
                 item: Optional[Item] = None
                 with TemporaryDirectory() as tmp_dir:
-                    src_data_file = os.path.join(constants.SRC_FOLDER, f"{id}.nc")
                     dest_data_file = os.path.join(tmp_dir, f"{id}.nc")
                     shutil.copyfile(src_data_file, dest_data_file)
 

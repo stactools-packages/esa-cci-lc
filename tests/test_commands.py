@@ -57,15 +57,18 @@ class CommandsTest(CliTestCase):
     def test_create_item(self) -> None:
         for id in constants.TEST_FILES:
             with self.subTest(id=id):
-                with TemporaryDirectory() as tmp_dir:
-                    src_data_filename = f"{id}.nc"
-                    stac_filename = f"{id}.json"
+                src_data_filename = f"{id}.nc"
+                src_data_file = os.path.join(constants.SRC_FOLDER, src_data_filename)
+                if not os.path.exists(src_data_file):
+                    pytest.skip(
+                        f"Data file {src_data_file} not available for test, skipping"
+                    )
+                    continue
 
+                with TemporaryDirectory() as tmp_dir:
+                    stac_filename = f"{id}.json"
                     src_collection = os.path.join(
                         constants.TRUTH_FOLDER, "collection.json"
-                    )
-                    src_data_file = os.path.join(
-                        constants.SRC_FOLDER, src_data_filename
                     )
                     dest_data_file = os.path.join(tmp_dir, src_data_filename)
                     shutil.copyfile(src_data_file, dest_data_file)
