@@ -167,3 +167,4 @@ DATA_VARIABLES = [
     "observation_count",
     "processed_flag",
 ]
+DATA_SHAPE = [64800, 129600]
