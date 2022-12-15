@@ -1,7 +1,6 @@
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Optional
 
-from netCDF4 import Dataset
 import rasterio
 from rasterio.windows import Window
 import rasterio.crs
@@ -9,7 +8,7 @@ import rasterio.shutil
 from rasterio.io import MemoryFile
 import numpy as np
 
-from stactools.esa_cci_lc import constants, classes
+from .. import constants, classes
 
 COG_PROFILE = {
     "compress": "deflate",
@@ -26,20 +25,20 @@ COG_CLASS_PROFILE = {
 
 
 def get_windows(tile_dim: int) -> List[Dict[str, Any]]:
-    for dim in constants.DATA_SHAPE:
+    for dim in constants.NETCDF_DATA_SHAPE:
         if dim % tile_dim:
             raise ValueError(
-                f"Source data shape '{constants.DATA_SHAPE}' is not evenly "
+                f"Source data shape '{constants.NETCDF_DATA_SHAPE}' is not evenly "
                 "divisible by the tile dimension '{tile_dim}'."
             )
 
-    num_rows = int(constants.DATA_SHAPE[0] / tile_dim)
-    num_cols = int(constants.DATA_SHAPE[1] / tile_dim)
+    num_rows = int(constants.NETCDF_DATA_SHAPE[0] / tile_dim)
+    num_cols = int(constants.NETCDF_DATA_SHAPE[1] / tile_dim)
     deg_increment = int(360 / num_cols)
 
     windows = []
-    for c in np.arange(0, num_cols):
-        for r in np.arange(0, num_rows):
+    for c in range(0, num_cols):
+        for r in range(0, num_rows):
             window = {}
             window["window"] = Window(c * tile_dim, r * tile_dim, tile_dim, tile_dim)
 
@@ -61,11 +60,11 @@ def get_colors() -> Dict[str, Tuple[int]]:
     return colors
 
 
-def make_cog_tiles(nc_href: str, cog_dir: str, tile_dim: int) -> Dict[str, List[str]]:
+def make_cog_tiles(nc_path: str, cog_dir: str, tile_dim: int) -> Dict[str, List[str]]:
     windows = get_windows(tile_dim)
     cog_paths: Dict[str, List[str]] = {window["tile"]: [] for window in windows}
     for variable in constants.DATA_VARIABLES:
-        with rasterio.open(f"netcdf:{nc_href}:{variable}") as src:
+        with rasterio.open(f"netcdf:{nc_path}:{variable}") as src:
             for window in windows:
                 window_transform = src.window_transform(window["window"])
                 window_data = src.read(1, window=window["window"])
@@ -90,7 +89,7 @@ def make_cog_tiles(nc_href: str, cog_dir: str, tile_dim: int) -> Dict[str, List[
 
                 cog_path = (
                     Path(cog_dir)
-                    / f"{Path(nc_href).stem}-{window['tile']}-{variable}.tif"
+                    / f"{Path(nc_path).stem}-{window['tile']}-{variable}.tif"
                 )
 
                 with MemoryFile() as mem_file:
@@ -106,13 +105,47 @@ def make_cog_tiles(nc_href: str, cog_dir: str, tile_dim: int) -> Dict[str, List[
     return cog_paths
 
 
-# if __name__ == "__main__":
-#     nc_href = "/Volumes/Samsung_T5/data/esa-cci/ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds.nc"
-#     cog_dir = "pjh/cogs"
-#     tile_dim = 16200
-#     cogs = make_cog_tiles(
-#         nc_href,
-#         cog_dir,
-#         tile_dim,
-#     )
-#     print(cogs)
+def create_cog_asset(
+    cog_href: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Creates a basic COG asset dict with shared core properties and optionally an href.
+    An href should be given for normal assets, but can be None for Item Asset
+    Definitions.
+
+    Args:
+        cog_href (str): The URL to the asset
+
+    Returns:
+        dict: Basic Asset object
+    """
+    key = Path(cog_href).stem.split("-")[-1]
+    asset: Dict[str, Any] = {
+        "type": constants.COG_MEDIA_TYPE,
+        "href": cog_href,
+        "title": constants.COG_INFO[key]["title"],
+        "description": constants.COG_INFO[key]["description"],
+        "roles": constants.COG_ROLES_DATA
+        if key == "lccs_class"
+        else constants.COG_ROLES_QUALITY,
+    }
+
+    band = {
+        "spatial_resolution": constants.RESOLUTION,
+        "sampling": constants.SAMPLING,
+    }
+
+    if key in constants.TABLES:
+        table = constants.TABLES[key]
+        asset["classification:classes"] = classes.to_stac(table)
+        # Determine nodata value
+        nodata = list(filter(lambda cls: len(cls) >= 6 and cls[5] is True, table))
+        if len(nodata) == 1:
+            band["nodata"] = nodata[0][0]
+
+    asset["raster:bands"] = [band]
+
+    # TODO: Add data type to raster band
+    # TODO: Correct nodata to match new COGs
+
+    return asset

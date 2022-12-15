@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from dateutil.parser import isoparse
 from netCDF4 import Dataset
@@ -20,6 +20,8 @@ from pystac import (
 from pystac.extensions.item_assets import AssetDefinition, ItemAssetsExtension
 from pystac.extensions.projection import ProjectionExtension
 from pystac.extensions.scientific import ScientificExtension
+from stactools.core.io import ReadHrefModifier
+from stactools.esa_cci_lc.tiler import make_cog_tiles
 
 from . import classes, cog, constants, netcdf
 
@@ -157,6 +159,38 @@ def create_collection(
     item_assets_attrs.item_assets = item_assets
 
     return collection
+
+
+def create_items(
+    nc_path: str,
+    cog_dir: str,
+    *,
+    cog_tile_dim: Optional[int] = constants.COG_TILE_DIM,
+    nc_api_url: Optional[str] = None,
+) -> List[Item]:
+    """Tiles NetCDF variables to COGs and creates an Item with COG assets for
+    each tile.
+
+    Args:
+        nc_href (str): _description_
+        cog_dir (str): _description_
+        cog_tile_dim (Optional[int], optional): _description_. Defaults to constants.COG_TILE_DIM.
+        nc_api_url (Optional[str], optional): _description_. Defaults to None.
+
+    Returns:
+        List[Item]: _description_
+    """
+    item_cog_lists = make_cog_tiles(nc_path, cog_dir, cog_tile_dim)
+
+    items = []
+    for item_cog_list in item_cog_lists:
+        item = create_item_from_asset_list(
+            item_cog_list,
+            nc_api_url
+        )
+        items.append(item)
+
+    return items
 
 
 def create_item(

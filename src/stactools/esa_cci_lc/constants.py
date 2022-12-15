@@ -125,35 +125,51 @@ EPSG_CODE = 4326
 DOI = "10.24381/cds.006f2c9a"
 
 # Assets
-COG_DESCRIPTIONS = {
-    "change_count": (
-        "Number of years where land cover class changes have occurred, since 1992. "
-        "0 for stable, greater than 0 for changes."
-    ),
-    "current_pixel_state": (
-        "Pixel identification from satellite surface reflectance observations, "
-        "mainly distinguishing between land, water, and snow/ice."
-    ),
-    "lccs_class": (
-        "Land cover class per pixel, defined using the Land Cover Classification System "
-        "developed by the United Nations Food and Agriculture Organization."
-    ),
-    "observation_count": (
-        "Number of valid satellite observations that have contributed to each "
-        "pixel's classification.\n\n"
-        "**Note:** The COG doesn't contain overviews!"
-    ),
-    "processed_flag": "Flag to mark areas that could not be classified.",
+COG_INFO = {
+    "change_count": {
+        "description": (
+            "Number of years where land cover class changes have occurred, since 1992. "
+            "0 for stable, greater than 0 for changes."
+        ),
+        "title": "Number of Class Changes",
+    },
+    "current_pixel_state": {
+        "description": (
+            "Pixel identification from satellite surface reflectance observations, "
+            "mainly distinguishing between land, water, and snow/ice."
+        ),
+        "title": "Land Cover Pixel Type Mask",
+    },
+    "lccs_class": {
+        "description": (
+            "Land cover class per pixel, defined using the Land Cover Classification System "
+            "developed by the United Nations Food and Agriculture Organization."
+        ),
+        "title": "Land Cover Class Defined in the Land Cover Classification System",
+    },
+    "observation_count": {
+        "description": (
+            "Number of valid satellite observations that have contributed to each "
+            "pixel's classification."
+        ),
+        "title": "Number of Valid Observations",
+    },
+    "processed_flag": {
+        "description": "Flag to mark areas that could not be classified.",
+        "title": "Land Cover Map Processed Area Flag",
+    },
 }
 
 COG_MEDIA_TYPE = "image/tiff; application=geotiff; profile=cloud-optimized"
 COG_ROLES_DATA = ["data", "cloud-optimized"]
 COG_ROLES_QUALITY = ["quality", "cloud-optimized"]
+COG_TILE_DIM = 16200
 
 NETCDF_TITLE = "Original netCDF 4 file"
 NETCDF_MEDIA_TYPE = "application/netcdf"
 NETCDF_ROLES = ["data", "quality", "source"]
 NETCDF_KEY = "netcdf"
+NETCDF_DATA_SHAPE = [64800, 129600]
 
 TABLES = {
     "current_pixel_state": classes.CURRENT_PIXEL_STATE_TABLE,
@@ -167,4 +183,3 @@ DATA_VARIABLES = [
     "observation_count",
     "processed_flag",
 ]
-DATA_SHAPE = [64800, 129600]
