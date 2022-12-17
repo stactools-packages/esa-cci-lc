@@ -1,22 +1,26 @@
+from typing import Any, Dict
+
 from pystac import Link, Provider, ProviderRole
 
 from . import classes
 
-# Collection
+# Collections
 TITLE = "ESA Climate Change Initiative Land Cover"
 DESCRIPTION = (
-    "This dataset provides global maps describing the land surface classes, "
-    "which have been defined using the United Nations Food and Agriculture "
-    "Organization's (UN FAO) Land Cover Classification System (LCCS). "
-    "In addition to the land cover (LC) maps, four quality flags are produced "
-    "to document the reliability of the classification and change detection. "
-    "In order to ensure continuity, these land cover maps are consistent with "
-    "the series of global annual LC maps from the 1990s to 2015 produced by "
-    "the European Space Agency (ESA) Climate Change Initiative (CCI)."
+    "The ESA Climate Change Initiative (CCI) dataset provides global maps "
+    "describing the land surface classes, which have been defined using the "
+    "United Nations Food and Agriculture Organization's (UN FAO) Land Cover "
+    "Classification System (LCCS). In addition to the land cover (LC) maps, "
+    "four quality flags are produced to document the reliability of the "
+    "classification and change detection. This collection contains tiled Cloud "
+    "Optimized GeoTIFFs (COGs) generated from the source NetCDF files."
 )
+NETCDF_TITLE = ""
+NETCDF_DESCRIPTION = ""
 START_DATETIME = "1992-01-01T00:00:00Z"
 END_DATETIME = "2020-12-31T23:59:59Z"
 BBOX = [-180.0, -90.0, 180.0, 90.0]
+KEYWORDS = ["Land Cover", "ESA", "CCI", "Global"]
 
 PROVIDERS = [
     Provider(
@@ -91,7 +95,7 @@ LINK_USER_GUIDE_V21 = Link(
     rel="about",
 )
 
-# Item
+# Items
 GEOMETRY = {
     "type": "Polygon",
     "coordinates": [[[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]]],
@@ -99,7 +103,7 @@ GEOMETRY = {
 
 # Extensions
 CLASSIFICATION_EXTENSION = (
-    "https://stac-extensions.github.io/classification/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/classification/v1.1.0/schema.json"
 )
 DATACUBE_EXTENSION = "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"
 PROCESSING_EXTENSION = "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
@@ -125,45 +129,57 @@ EPSG_CODE = 4326
 DOI = "10.24381/cds.006f2c9a"
 
 # Assets
-COG_INFO = {
-    "change_count": {
-        "description": (
-            "Number of years where land cover class changes have occurred, since 1992. "
-            "0 for stable, greater than 0 for changes."
-        ),
-        "title": "Number of Class Changes",
-    },
-    "current_pixel_state": {
-        "description": (
-            "Pixel identification from satellite surface reflectance observations, "
-            "mainly distinguishing between land, water, and snow/ice."
-        ),
-        "title": "Land Cover Pixel Type Mask",
-    },
-    "lccs_class": {
-        "description": (
-            "Land cover class per pixel, defined using the Land Cover Classification System "
-            "developed by the United Nations Food and Agriculture Organization."
-        ),
-        "title": "Land Cover Class Defined in the Land Cover Classification System",
-    },
-    "observation_count": {
-        "description": (
-            "Number of valid satellite observations that have contributed to each "
-            "pixel's classification."
-        ),
-        "title": "Number of Valid Observations",
-    },
-    "processed_flag": {
-        "description": "Flag to mark areas that could not be classified.",
-        "title": "Land Cover Map Processed Area Flag",
-    },
-}
-
 COG_MEDIA_TYPE = "image/tiff; application=geotiff; profile=cloud-optimized"
 COG_ROLES_DATA = ["data", "cloud-optimized"]
 COG_ROLES_QUALITY = ["quality", "cloud-optimized"]
 COG_TILE_DIM = 16200
+COG_ASSETS: Dict[str, Dict[str, Any]] = {
+    "change_count": {
+        "title": "Number of Class Changes",
+        "description": (
+            "Number of years where land cover class changes have occurred, since 1992. "
+            "0 for stable, greater than 0 for changes."
+        ),
+        "roles": COG_ROLES_QUALITY,
+        "data_type": "uint8",
+    },
+    "current_pixel_state": {
+        "title": "Land Cover Pixel Type Mask",
+        "description": (
+            "Pixel identification from satellite surface reflectance observations, "
+            "mainly distinguishing between land, water, and snow/ice."
+        ),
+        "roles": COG_ROLES_QUALITY,
+        "data_type": "uint8",
+        "nodata": 255,
+    },
+    "lccs_class": {
+        "title": "Land Cover Class Defined in the Land Cover Classification System",
+        "description": (
+            "Land cover class per pixel, defined using the Land Cover Classification System "
+            "developed by the United Nations Food and Agriculture Organization."
+        ),
+        "roles": COG_ROLES_DATA,
+        "data_type": "uint8",
+        "nodata": 0,
+    },
+    "observation_count": {
+        "title": "Number of Valid Observations",
+        "description": (
+            "Number of valid satellite observations that have contributed to each "
+            "pixel's classification."
+        ),
+        "roles": COG_ROLES_QUALITY,
+        "data_type": "uint16",
+    },
+    "processed_flag": {
+        "title": "Land Cover Map Processed Area Flag",
+        "description": "Flag to mark areas that could not be classified.",
+        "roles": COG_ROLES_QUALITY,
+        "data_type": "uint8",
+        "nodata": 255,
+    },
+}
 
 NETCDF_TITLE = "Original netCDF 4 file"
 NETCDF_MEDIA_TYPE = "application/netcdf"

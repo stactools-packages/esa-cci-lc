@@ -1,21 +1,26 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds",
+  "id": "C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180",
   "properties": {
-    "start_datetime": "1992-01-01T00:00:00Z",
-    "end_datetime": "1992-12-31T23:59:59Z",
-    "title": "Land Cover Map of 1992",
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2018-12-31T23:59:59Z",
+    "esa_cci_lc:version": "v2.1.1",
+    "esa_cci_lc:tile": "N79W180",
+    "title": "European Space Agency Climate Change Initiative (ESA CCI) 2018 Land Cover Map - Tile N79W180",
     "proj:epsg": 4326,
-    "processing:software": {
-      "amorgos": "4,0",
-      "lc-sdr": "1.0",
-      "lc-sr": "1.0",
-      "lc-classification": "1.0",
-      "lc-user-tools(1)": "3.13",
-      "lc-user-tools(2)": "4.3"
-    },
-    "processing:lineage": "Produced based on the following data sources: MERIS FR L1B version 5.05, MERIS RR L1B version 8.0, SPOT VGT P",
+    "proj:shape": [
+      4050,
+      4050
+    ],
+    "proj:transform": [
+      0.002777777777777778,
+      0.0,
+      -180.0,
+      0.0,
+      -0.0027777777777777783,
+      90.00000000000001
+    ],
     "datetime": null
   },
   "geometry": {
@@ -23,41 +28,120 @@
     "coordinates": [
       [
         [
-          -180,
-          -90
+          -168.75,
+          78.75000000000001
         ],
         [
-          180,
-          -90
+          -168.75,
+          90.00000000000001
         ],
         [
-          180,
-          90
+          -180.0,
+          90.00000000000001
         ],
         [
-          -180,
-          90
+          -180.0,
+          78.75000000000001
         ],
         [
-          -180,
-          -90
+          -168.75,
+          78.75000000000001
         ]
       ]
     ]
   },
   "links": [
     {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "ESA CCI Land Cover"
+    },
+    {
       "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "ESA Climate Change Initiative Land Cover"
+    },
+    {
+      "rel": "parent",
       "href": "../collection.json",
       "type": "application/json",
       "title": "ESA Climate Change Initiative Land Cover"
     }
   ],
   "assets": {
-    "lccs_class": {
-      "href": "lccs_class.tif",
+    "change_count": {
+      "href": "./C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180-change_count.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Land cover class defined in LCCS",
+      "title": "Number of Class Changes",
+      "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area",
+          "data_type": "uint8"
+        }
+      ],
+      "roles": [
+        "quality",
+        "cloud-optimized"
+      ]
+    },
+    "current_pixel_state": {
+      "href": "./C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180-current_pixel_state.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Land Cover Pixel Type Mask",
+      "description": "Pixel identification from satellite surface reflectance observations, mainly distinguishing between land, water, and snow/ice.",
+      "classification:classes": [
+        {
+          "value": 1,
+          "name": "land",
+          "description": "Clear land"
+        },
+        {
+          "value": 2,
+          "name": "water",
+          "description": "Clear water"
+        },
+        {
+          "value": 3,
+          "name": "snow",
+          "description": "Clear snow / ice"
+        },
+        {
+          "value": 4,
+          "name": "cloud",
+          "description": "Cloud"
+        },
+        {
+          "value": 5,
+          "name": "cloud_shadow",
+          "description": "Cloud_shadow"
+        },
+        {
+          "value": 6,
+          "name": "filled",
+          "description": "Filled"
+        }
+      ],
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area",
+          "data_type": "uint8",
+          "nodata": 255
+        }
+      ],
+      "roles": [
+        "quality",
+        "cloud-optimized"
+      ]
+    },
+    "lccs_class": {
+      "href": "./C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180-lccs_class.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Land Cover Class Defined in the Land Cover Classification System",
       "description": "Land cover class per pixel, defined using the Land Cover Classification System developed by the United Nations Food and Agriculture Organization.",
       "classification:classes": [
         {
@@ -309,31 +393,35 @@
         {
           "spatial_resolution": 300,
           "sampling": "area",
-          "nodata": 0
+          "data_type": "uint8"
         }
-      ],
-      "created": "2022-09-30T11:39:53.751396Z",
-      "proj:shape": [
-        129600,
-        64800
-      ],
-      "proj:transform": [
-        -180.0,
-        0.002777777777777778,
-        0.0,
-        90.00000000000001,
-        0.0,
-        -0.0027777777777777783
       ],
       "roles": [
         "data",
         "cloud-optimized"
       ]
     },
-    "processed_flag": {
-      "href": "processed_flag.tif",
+    "observation_count": {
+      "href": "./C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180-observation_count.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "LC map processed area flag",
+      "title": "Number of Valid Observations",
+      "description": "Number of valid satellite observations that have contributed to each pixel's classification.",
+      "raster:bands": [
+        {
+          "spatial_resolution": 300,
+          "sampling": "area",
+          "data_type": "uint16"
+        }
+      ],
+      "roles": [
+        "quality",
+        "cloud-optimized"
+      ]
+    },
+    "processed_flag": {
+      "href": "./C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180-processed_flag.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Land Cover Map Processed Area Flag",
       "description": "Flag to mark areas that could not be classified.",
       "classification:classes": [
         {
@@ -350,312 +438,27 @@
       "raster:bands": [
         {
           "spatial_resolution": 300,
-          "sampling": "area"
+          "sampling": "area",
+          "data_type": "uint8",
+          "nodata": 255
         }
-      ],
-      "created": "2022-09-30T11:42:19.701847Z",
-      "proj:shape": [
-        129600,
-        64800
-      ],
-      "proj:transform": [
-        -180.0,
-        0.002777777777777778,
-        0.0,
-        90.00000000000001,
-        0.0,
-        -0.0027777777777777783
       ],
       "roles": [
         "quality",
         "cloud-optimized"
-      ]
-    },
-    "current_pixel_state": {
-      "href": "current_pixel_state.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "LC pixel type mask",
-      "description": "Pixel identification from satellite surface reflectance observations, mainly distinguishing between land, water, and snow/ice.",
-      "classification:classes": [
-        {
-          "value": 1,
-          "name": "land",
-          "description": "Clear land"
-        },
-        {
-          "value": 2,
-          "name": "water",
-          "description": "Clear water"
-        },
-        {
-          "value": 3,
-          "name": "snow",
-          "description": "Clear snow / ice"
-        },
-        {
-          "value": 4,
-          "name": "cloud",
-          "description": "Cloud"
-        },
-        {
-          "value": 5,
-          "name": "cloud_shadow",
-          "description": "Cloud_shadow"
-        },
-        {
-          "value": 6,
-          "name": "filled",
-          "description": "Filled"
-        }
-      ],
-      "raster:bands": [
-        {
-          "spatial_resolution": 300,
-          "sampling": "area"
-        }
-      ],
-      "created": "2022-09-30T11:45:14.790327Z",
-      "proj:shape": [
-        129600,
-        64800
-      ],
-      "proj:transform": [
-        -180.0,
-        0.002777777777777778,
-        0.0,
-        90.00000000000001,
-        0.0,
-        -0.0027777777777777783
-      ],
-      "roles": [
-        "quality",
-        "cloud-optimized"
-      ]
-    },
-    "observation_count": {
-      "href": "observation_count.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Number of valid observations",
-      "description": "Number of valid satellite observations that have contributed to each pixel's classification.\n\n**Note:** The COG doesn't contain overviews!",
-      "raster:bands": [
-        {
-          "spatial_resolution": 300,
-          "sampling": "area"
-        }
-      ],
-      "created": "2022-09-30T11:57:42.435988Z",
-      "proj:shape": [
-        129600,
-        64800
-      ],
-      "proj:transform": [
-        -180.0,
-        0.002777777777777778,
-        0.0,
-        90.00000000000001,
-        0.0,
-        -0.0027777777777777783
-      ],
-      "roles": [
-        "quality",
-        "cloud-optimized"
-      ]
-    },
-    "change_count": {
-      "href": "change_count.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Number of class changes",
-      "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
-      "raster:bands": [
-        {
-          "spatial_resolution": 300,
-          "sampling": "area"
-        }
-      ],
-      "created": "2022-09-30T12:00:03.671412Z",
-      "proj:shape": [
-        129600,
-        64800
-      ],
-      "proj:transform": [
-        -180.0,
-        0.002777777777777778,
-        0.0,
-        90.00000000000001,
-        0.0,
-        -0.0027777777777777783
-      ],
-      "roles": [
-        "quality",
-        "cloud-optimized"
-      ]
-    },
-    "netcdf": {
-      "href": "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992-v2.0.7cds.nc",
-      "type": "application/netcdf",
-      "title": "Original netCDF 4 file",
-      "version": "2.0.7cds",
-      "cube:dimensions": {
-        "lat": {
-          "type": "lat",
-          "extent": [
-            -90.0,
-            90.0
-          ]
-        },
-        "lon": {
-          "type": "lon",
-          "extent": [
-            -180.0,
-            180.0
-          ]
-        },
-        "time": {
-          "type": "time",
-          "values": [
-            8035.0
-          ]
-        },
-        "bounds": {
-          "type": "bounds",
-          "values": [
-            0,
-            1
-          ]
-        }
-      },
-      "cube:variables": {
-        "lccs_class": {
-          "dimensions": [
-            "time",
-            "lat",
-            "lon"
-          ],
-          "type": "data",
-          "description": "Land cover class defined in LCCS"
-        },
-        "processed_flag": {
-          "dimensions": [
-            "time",
-            "lat",
-            "lon"
-          ],
-          "type": "data",
-          "description": "LC map processed area flag"
-        },
-        "current_pixel_state": {
-          "dimensions": [
-            "time",
-            "lat",
-            "lon"
-          ],
-          "type": "data",
-          "description": "LC pixel type mask"
-        },
-        "observation_count": {
-          "dimensions": [
-            "time",
-            "lat",
-            "lon"
-          ],
-          "type": "data",
-          "description": "number of valid observations"
-        },
-        "change_count": {
-          "dimensions": [
-            "time",
-            "lat",
-            "lon"
-          ],
-          "type": "data",
-          "description": "number of class changes"
-        },
-        "lat": {
-          "dimensions": [
-            "lat"
-          ],
-          "type": "auxiliary",
-          "description": "latitude",
-          "unit": "degrees_north",
-          "axis": "Y"
-        },
-        "lon": {
-          "dimensions": [
-            "lon"
-          ],
-          "type": "auxiliary",
-          "description": "longitude",
-          "unit": "degrees_east",
-          "axis": "X"
-        },
-        "crs": {
-          "dimensions": [],
-          "type": "auxiliary"
-        },
-        "lat_bounds": {
-          "dimensions": [
-            "lat",
-            "bounds"
-          ],
-          "type": "auxiliary"
-        },
-        "lon_bounds": {
-          "dimensions": [
-            "lon",
-            "bounds"
-          ],
-          "type": "auxiliary"
-        },
-        "time_bounds": {
-          "dimensions": [
-            "time",
-            "bounds"
-          ],
-          "type": "auxiliary"
-        },
-        "time": {
-          "dimensions": [
-            "time"
-          ],
-          "type": "auxiliary",
-          "description": "time",
-          "unit": "days since 1970-01-01 00:00:00",
-          "axis": "T"
-        }
-      },
-      "created": "2018-11-30T09:54:51Z",
-      "proj:shape": [
-        129600,
-        64800
-      ],
-      "proj:transform": [
-        -180.0,
-        0.002777777777778,
-        0.0,
-        90.0,
-        0.0,
-        -0.002777777777778
-      ],
-      "roles": [
-        "data",
-        "quality",
-        "source"
       ]
     }
   },
   "bbox": [
     -180.0,
-    -90.0,
-    180.0,
-    90.0
+    78.75000000000001,
+    -168.75,
+    90.00000000000001
   ],
   "stac_extensions": [
-    "https://stac-extensions.github.io/classification/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/processing/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/version/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"
+    "https://stac-extensions.github.io/classification/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json"
   ],
   "collection": "esa-cci-lc"
 }
