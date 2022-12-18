@@ -5,16 +5,18 @@ from dateutil.parser import isoparse
 from netCDF4 import Dataset
 from pystac import (
     Asset,
+    CatalogType,
     Collection,
     CommonMetadata,
     Extent,
     Item,
     SpatialExtent,
-    TemporalExtent, Summaries, CatalogType
+    Summaries,
+    TemporalExtent,
 )
+from pystac.extensions.item_assets import AssetDefinition, ItemAssetsExtension
 from pystac.extensions.projection import ProjectionExtension
 from pystac.extensions.scientific import ScientificExtension
-from pystac.extensions.item_assets import AssetDefinition, ItemAssetsExtension
 
 from .. import classes, constants
 from . import netcdf

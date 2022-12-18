@@ -5,7 +5,7 @@ stactools.core.use_fsspec()
 
 
 def register_plugin(registry: Registry) -> None:
-    from stactools.esa_cci_lc.archive import commands
+    from stactools.esa_cci_lc import commands
 
     registry.register_subcommand(commands.create_esaccilc_command)
 

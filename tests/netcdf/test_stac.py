@@ -1,6 +1,5 @@
+from stactools.esa_cci_lc.netcdf.stac import create_collection, create_item
 from tests import test_data
-
-from stactools.esa_cci_lc.netcdf.stac import create_item, create_collection
 
 
 def test_create_item_v21() -> None:
