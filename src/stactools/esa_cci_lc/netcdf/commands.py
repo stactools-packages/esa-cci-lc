@@ -52,9 +52,7 @@ def create_command(esaccilc: Group) -> Command:
         Args:
             destination (str): An HREF for the Collection JSON
         """
-        collection = stac.create_collection(
-            id, start_time, end_time
-        )
+        collection = stac.create_collection(id, start_time, end_time)
         collection.set_self_href(destination)
         collection.save_object()
 
