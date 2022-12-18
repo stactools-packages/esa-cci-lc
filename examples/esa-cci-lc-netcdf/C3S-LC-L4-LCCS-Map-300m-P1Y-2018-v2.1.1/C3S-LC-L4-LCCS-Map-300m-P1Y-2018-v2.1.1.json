@@ -5,6 +5,7 @@
   "properties": {
     "start_datetime": "2018-01-01T00:00:00Z",
     "end_datetime": "2018-12-31T23:59:59Z",
+    "esa_cci_lc:version": "2.1.1",
     "classification:classes": [
       {
         "value": 0,
@@ -314,7 +315,6 @@
       "href": "../../../tests/data-files/external/C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc",
       "type": "application/netcdf",
       "title": "Original NetCDF 4 file",
-      "version": "2.1.1",
       "cube:dimensions": {
         "lat": {
           "type": "lat",
@@ -473,7 +473,6 @@
     "https://stac-extensions.github.io/classification/v1.1.0/schema.json",
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/processing/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/version/v1.1.0/schema.json",
     "https://stac-extensions.github.io/datacube/v2.1.0/schema.json"
   ],
   "collection": "esa-cci-lc-netcdf"

@@ -60,6 +60,7 @@ def create_item(nc_href: str) -> Item:
         properties: Dict[str, Any] = {
             "start_datetime": start_datetime,
             "end_datetime": end_datetime,
+            "esa_cci_lc:version": dataset.product_version,
             "classification:classes": classes.to_stac(),
         }
 
@@ -101,9 +102,6 @@ def create_item(nc_href: str) -> Item:
 
         # Add asset to the item
         asset_dict = netcdf.create_asset(nc_href)
-
-        item.stac_extensions.append(constants.VERSION_EXTENSION)
-        asset_dict["version"] = dataset.product_version
 
         # todo: replace with DataCube extension from PySTAC
         item.stac_extensions.append(constants.DATACUBE_EXTENSION)
