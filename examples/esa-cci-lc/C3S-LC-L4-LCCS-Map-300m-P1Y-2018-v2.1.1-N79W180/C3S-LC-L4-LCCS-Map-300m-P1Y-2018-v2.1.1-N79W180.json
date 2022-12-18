@@ -7,7 +7,7 @@
     "end_datetime": "2018-12-31T23:59:59Z",
     "esa_cci_lc:version": "v2.1.1",
     "esa_cci_lc:tile": "N79W180",
-    "title": "European Space Agency Climate Change Initiative (ESA CCI) 2018 Land Cover Map - Tile N79W180",
+    "title": "ESA CCI Land Cover Map for Year 2018, Tile N79W180",
     "proj:epsg": 4326,
     "proj:shape": [
       4050,
@@ -61,13 +61,13 @@
       "rel": "collection",
       "href": "../collection.json",
       "type": "application/json",
-      "title": "ESA Climate Change Initiative Land Cover"
+      "title": "ESA Climate Change Initiative Land Cover Maps - COG Tiles"
     },
     {
       "rel": "parent",
       "href": "../collection.json",
       "type": "application/json",
-      "title": "ESA Climate Change Initiative Land Cover"
+      "title": "ESA Climate Change Initiative Land Cover Maps - COG Tiles"
     }
   ],
   "assets": {

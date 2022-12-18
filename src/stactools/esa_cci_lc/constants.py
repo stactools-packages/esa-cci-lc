@@ -5,18 +5,26 @@ from pystac import Link, Provider, ProviderRole
 from . import classes
 
 # Collections
-TITLE = "ESA Climate Change Initiative Land Cover"
-DESCRIPTION = (
+COG_COLLECTION_TITLE = "ESA Climate Change Initiative Land Cover Maps - COG Tiles"
+COG_COLLECTION_DESCRIPTION = (
     "The ESA Climate Change Initiative (CCI) dataset provides global maps "
-    "describing the land surface classes, which have been defined using the "
+    "describing land surface classes, which have been defined using the "
     "United Nations Food and Agriculture Organization's (UN FAO) Land Cover "
     "Classification System (LCCS). In addition to the land cover (LC) maps, "
     "four quality flags are produced to document the reliability of the "
-    "classification and change detection. This collection contains tiled Cloud "
-    "Optimized GeoTIFFs (COGs) generated from the source NetCDF files."
+    "classification and change detection. This Collection describes tiled Cloud "
+    "Optimized GeoTIFFs (COGs) that were generated from the source NetCDF data."
 )
-NETCDF_TITLE = ""
-NETCDF_DESCRIPTION = ""
+NETCDF_COLLECTION_TITLE = "ESA Climate Change Initiative Land Cover Maps - NetCDF Data"
+NETCDF_COLLECTION_DESCRIPTION = (
+    "The ESA Climate Change Initiative (CCI) dataset provides global maps "
+    "describing land surface classes, which have been defined using the "
+    "United Nations Food and Agriculture Organization's (UN FAO) Land Cover "
+    "Classification System (LCCS). In addition to the land cover (LC) maps, "
+    "four quality flags are produced to document the reliability of the "
+    "classification and change detection. This Collection describes the source "
+    "NetCDF data."
+)
 START_DATETIME = "1992-01-01T00:00:00Z"
 END_DATETIME = "2020-12-31T23:59:59Z"
 BBOX = [-180.0, -90.0, 180.0, 90.0]
@@ -181,7 +189,7 @@ COG_ASSETS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-NETCDF_TITLE = "Original netCDF 4 file"
+NETCDF_ASSET_TITLE = "Original NetCDF 4 file"
 NETCDF_MEDIA_TYPE = "application/netcdf"
 NETCDF_ROLES = ["data", "quality", "source"]
 NETCDF_KEY = "netcdf"

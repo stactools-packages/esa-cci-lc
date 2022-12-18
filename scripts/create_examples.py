@@ -10,16 +10,24 @@ import shutil
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from pystac import Catalog, CatalogType
 import stactools.core.copy
+from pystac import Catalog, CatalogType
 
 from stactools.esa_cci_lc.cog import stac as cog_stac
-from stactools.esa_cci_lc.constants import DESCRIPTION
+from stactools.esa_cci_lc.netcdf import stac as netcdf_stac
 
 root = Path(__file__).parent.parent
 examples = root / "examples"
 data_files = root / "tests" / "data-files" / "external"
 
+DESCRIPTION = (
+    "The ESA Climate Change Initiative (CCI) dataset provides global maps "
+    "describing land surface classes, which have been defined using the "
+    "United Nations Food and Agriculture Organization's (UN FAO) Land Cover "
+    "Classification System (LCCS). In addition to the land cover (LC) maps, "
+    "four quality flags are produced to document the reliability of the "
+    "classification and change detection."
+)
 
 with TemporaryDirectory() as tmp_dir:
     catalog = Catalog("esa-cci-lc", DESCRIPTION, "ESA CCI Land Cover")
@@ -30,11 +38,22 @@ with TemporaryDirectory() as tmp_dir:
         str(data_files / "C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc"),
         tmp_dir,
         cog_tile_dim=4050,
-        tile_row_col=[0, 0]
+        tile_col_row=[0, 0],
     )[0]
     cog_item.properties.pop("created")
     cog.add_item(cog_item)
+    cog.update_extent_from_items()
     catalog.add_child(cog)
+
+    print("Creating NetCDF collection...")
+    netcdf = netcdf_stac.create_collection()
+    netcdf_item = netcdf_stac.create_item(
+        str(data_files / "C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc")
+    )
+    netcdf_item.properties.pop("created")
+    netcdf.add_item(netcdf_item)
+    netcdf.update_extent_from_items()
+    catalog.add_child(netcdf)
 
     print("Saving catalog...")
     catalog.normalize_hrefs(str(examples))

@@ -2,7 +2,7 @@
   "type": "Catalog",
   "id": "esa-cci-lc",
   "stac_version": "1.0.0",
-  "description": "The ESA Climate Change Initiative (CCI) dataset provides global maps describing the land surface classes, which have been defined using the United Nations Food and Agriculture Organization's (UN FAO) Land Cover Classification System (LCCS). In addition to the land cover (LC) maps, four quality flags are produced to document the reliability of the classification and change detection. This collection contains tiled Cloud Optimized GeoTIFFs (COGs) generated from the source NetCDF files.",
+  "description": "The ESA Climate Change Initiative (CCI) dataset provides global maps describing land surface classes, which have been defined using the United Nations Food and Agriculture Organization's (UN FAO) Land Cover Classification System (LCCS). In addition to the land cover (LC) maps, four quality flags are produced to document the reliability of the classification and change detection.",
   "links": [
     {
       "rel": "root",
@@ -14,7 +14,13 @@
       "rel": "child",
       "href": "./esa-cci-lc/collection.json",
       "type": "application/json",
-      "title": "ESA Climate Change Initiative Land Cover"
+      "title": "ESA Climate Change Initiative Land Cover Maps - COG Tiles"
+    },
+    {
+      "rel": "child",
+      "href": "./esa-cci-lc-netcdf/collection.json",
+      "type": "application/json",
+      "title": "ESA Climate Change Initiative Land Cover Maps - NetCDF Data"
     }
   ],
   "stac_extensions": [],

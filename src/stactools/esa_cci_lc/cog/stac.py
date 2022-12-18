@@ -21,7 +21,7 @@ from pystac.extensions.projection import ProjectionExtension
 from pystac.extensions.scientific import ScientificExtension
 from stactools.core.io import ReadHrefModifier
 
-from .. import constants
+from .. import classes, constants
 from .cog import COGMetadata, create_cog_asset, make_cog_tiles
 
 logger = logging.getLogger(__name__)
@@ -32,26 +32,34 @@ def create_items(
     cog_dir: str,
     *,
     cog_tile_dim: int = constants.COG_TILE_DIM,
-    tile_row_col: Optional[List[int]] = None,
+    tile_col_row: Optional[List[int]] = None,
     nc_api_url: Optional[str] = None,
 ) -> List[Item]:
     """Tiles NetCDF variables to COGs and creates an Item with COG assets for
     each tile.
 
     Args:
-        nc_href (str): _description_
-        cog_dir (str): _description_
-        cog_tile_dim (Optional[int], optional): _description_. Defaults to constants.COG_TILE_DIM.
-        nc_api_url (Optional[str], optional): _description_. Defaults to None.
-
+        nc_href (str): Local path to NetCDF file.
+        cog_dir (str): Local directory to store created COGs.
+        cog_tile_dim (Optional[int]): Optional COG tile dimension in pixels.
+            Defaults to ``constants.COG_TILE_DIM``.
+        tile_col_row (Optional[List[int]]): Optional tile grid column and row
+            indices. Use to create an Item and COGs for a single tile. Indices
+            are 0 based.
+        nc_api_url (Optional[str]: Base STAC API URL for Items describing the
+            NetCDF files from which the COGs tiles are generated, e.g., 'https://
+            planetarycomputer.microsoft.com/api/stac/v1/collections/
+            esa-cci-lc-netcdf/items/'. The ID of the STAC Item describing the
+            NetCDF file used to create the tiled COGs will be appended to this
+            url and used in a 'derived_from' Link.
     Returns:
-        List[Item]: _description_
+        List[Item]: List of created STAC Item objects.
     """
-    item_cog_lists = make_cog_tiles(nc_path, cog_dir, cog_tile_dim, tile_row_col)
+    item_cog_lists = make_cog_tiles(nc_path, cog_dir, cog_tile_dim, tile_col_row)
 
     items = []
     for item_cog_list in item_cog_lists:
-        item = create_item_from_asset_list(item_cog_list, nc_api_url)
+        item = create_item_from_asset_list(item_cog_list, nc_api_url=nc_api_url)
         items.append(item)
 
     return items
@@ -59,21 +67,25 @@ def create_items(
 
 def create_item_from_asset_list(
     cog_hrefs: List[str],
+    *,
     nc_api_url: Optional[str] = None,
     read_href_modifier: Optional[ReadHrefModifier] = None,
 ) -> Item:
-    """_summary_
+    """Generates a STAC Item from a list of HREFs to a single tile's COGs.
 
     Args:
-        cog_hrefs (str): _description_
-        nc_api_url (Optional[str], optional): _description_. Defaults to None.
-        read_href_modifier (Optional[ReadHrefModifier], optional): _description_. Defaults to None.
-
-    Raises:
-        ValueError: _description_
+        cog_hrefs (str): List of five COG HREFs.
+        nc_api_url (Optional[str]: Base STAC API URL for Items describing the
+            NetCDF files from which the COGs tiles are generated, e.g., 'https://
+            planetarycomputer.microsoft.com/api/stac/v1/collections/
+            esa-cci-lc-netcdf/items/'. The ID of the STAC Item describing the
+            NetCDF file used to create the tiled COGs will be appended to this
+            url and used in a 'derived_from' Link.
+        read_href_modifier (Optional[ReadHrefModifier]): An optional function
+            to modify an HREF, e.g., to add a token to a URL.
 
     Returns:
-        Item: _description_
+        Item: The created STAC Item object.
     """
     if len(cog_hrefs) != 5:
         raise ValueError(
@@ -108,7 +120,7 @@ def create_item_from_asset_list(
         item.add_asset(key, Asset.from_dict(create_cog_asset(key, cog_href)))
 
     if nc_api_url:
-        nc_stac_item_id = "-".join(cog_hrefs[0].split("-")[:-1])
+        nc_stac_item_id = "-".join(Path(cog_hrefs[0]).stem.split("-")[:-1])
         item.add_link(
             Link(
                 rel="derived_from",
@@ -121,8 +133,6 @@ def create_item_from_asset_list(
     item.stac_extensions.append(constants.CLASSIFICATION_EXTENSION)
     item.stac_extensions.append(constants.RASTER_EXTENSION)
 
-    item.validate()
-
     return item
 
 
@@ -134,20 +144,18 @@ def create_collection(
     """Create a STAC Collection for ESA CCI data.
 
     Args:
-        id (str): A custom collection ID, defaults to 'esa-cci-lc'
-        start_time (str): The start timestamp for the temporal extent, defaults
-            to ``constants.START_DATETIME``.  Timestamps consist of a date and time
-            in UTC and must follow RFC 3339, section 5.6.
-        end_time (str): The end timestamp for the temporal extent, default to
-            ``constants.END_DATETIME``.  Timestamps consist of a date and time in
-            UTC and must follow RFC 3339, section 5.6.  To specify an open-ended
-            temporal extent, set this option to 'open-ended'.
+        id (str): A custom collection ID, defaults to 'esa-cci-lc'.
+        start_time (Optional[str]): The start timestamp for the temporal extent,
+            defaults to ``constants.START_DATETIME``.  Timestamps consist of a
+            date and time in UTC and must follow RFC 3339, section 5.6.
+        end_time (Optional[str]): The end timestamp for the temporal extent,
+            default to ``constants.END_DATETIME``.  Timestamps consist of a date
+            and time in UTC and must follow RFC 3339, section 5.6.  To specify]
+            an open-ended temporal extent, set this option to 'open-ended'.
 
     Returns:
         Collection: STAC Collection object
     """
-    # TODO: Add version in summaries
-
     # Time must be in UTC
     if start_time is None:
         start_datetime = isoparse(constants.START_DATETIME)
@@ -172,13 +180,21 @@ def create_collection(
         constants.RASTER_EXTENSION,
     ]
 
-    summaries = Summaries({"esa_cci_lc:version": constants.VERSIONS})
+    classification = classes.to_stac()
+    summaries = Summaries(
+        {
+            "classification:classes": classification,
+            "esa_cci_lc:version": constants.VERSIONS,
+        },
+        # Up the maxcount for the classes, otherwise the classes will be omitted from output
+        maxcount=len(classification) + 1,
+    )
 
     collection = Collection(
         stac_extensions=extensions,
         id=id,
-        title=constants.TITLE,
-        description=constants.DESCRIPTION,
+        title=constants.COG_COLLECTION_TITLE,
+        description=constants.COG_COLLECTION_DESCRIPTION,
         keywords=constants.KEYWORDS,
         license="proprietary",
         providers=constants.PROVIDERS,

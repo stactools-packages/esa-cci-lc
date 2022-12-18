@@ -27,6 +27,22 @@ COG_PROFILE = {
 def make_cog_tiles(
     nc_path: str, cog_dir: str, tile_dim: int, tile_col_row: Optional[List[int]] = None
 ) -> List[List[str]]:
+    """Generates tiled COGs from NetCDF variables. There are five variables of
+    interest, so five COGs are generated for each tile.
+
+    Args:
+        nc_path (str): Local path to NetCDF file.
+        cog_dir (str): Local directory to store creatd COGs.
+        cog_tile_dim (Optional[int]): Optional COG tile dimension in pixels.
+            Defaults to ``constants.COG_TILE_DIM``.
+        tile_col_row (Optional[List[int]]): Optional tile grid column and row
+            indices. Use to create an Item and COGs for a single tile. Indices
+            are 0 based.
+
+    Returns:
+        List[List[str]]: List of lists of tiled COG paths. Each inner list
+            contains the five COG paths for a single tile.
+    """
     windows = get_windows(tile_dim, tile_col_row)
     cog_paths: Dict[str, List[str]] = {window["tile"]: [] for window in windows}
     for variable in constants.DATA_VARIABLES:
@@ -62,7 +78,7 @@ def make_cog_tiles(
                     with mem_file.open(**dst_profile) as mem:
                         mem.write(window_data, 1)
                         if variable == "lccs_class":
-                            mem.write_colormap(1, get_colormap())
+                            mem.write_colormap(1, _get_colormap())
                             cog_profile_mode = COG_PROFILE.copy()
                             cog_profile_mode["overview_resampling"] = "mode"
                             rasterio.shutil.copy(mem, cog_path, **cog_profile_mode)
@@ -76,6 +92,22 @@ def make_cog_tiles(
 def get_windows(
     tile_dim: int, tile_col_row: Optional[List[int]] = None
 ) -> List[Dict[str, Any]]:
+    """Creates rasterio ``Window`` objects and tile ID strings. The tile IDs are
+    the geographic coordinates of the lower left tile corner rounded to the
+    nearest degree. Unless ``tile_col_row`` is passed, objects and IDs will be
+    generated for all tiles in a tile grid defined by ``tile_dim``.
+
+    Args:
+        cog_tile_dim (Optional[int]): Optional COG tile dimension in pixels.
+            Defaults to ``constants.COG_TILE_DIM``.
+        tile_col_row (Optional[List[int]]): Optional tile grid column and row
+            indices. Use to create an Item and COGs for a single tile. Indices
+            are 0 based.
+
+    Returns:
+        List[Dict[str, Any]]: List of dictionaries containing a rasterio
+            ``Window`` object and Tile ID string.
+    """
     for dim in constants.NETCDF_DATA_SHAPE:
         if dim % tile_dim:
             raise ValueError(
@@ -91,7 +123,8 @@ def get_windows(
     if 360 % num_cols:
         logger.warning(
             "Non-integer tile degree increment. Lower left corner coordinates "
-            "in tile file names will be rounded to nearest integer degree.")
+            "in tile file names will be rounded to nearest integer degree."
+        )
     deg_increment = 360 / num_cols
 
     if tile_col_row is not None:
@@ -122,7 +155,7 @@ def get_windows(
     return windows
 
 
-def get_colormap() -> Dict[str, Tuple[int, ...]]:
+def _get_colormap() -> Dict[str, Tuple[int, ...]]:
     colors: Dict[str, Tuple[int, ...]] = {}
     for row in classes.TABLE:
         colors[row[0]] = tuple([*row[1], 255])
@@ -134,16 +167,16 @@ def create_cog_asset(
     cog_href: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Creates a basic COG asset dict with shared core properties and optionally an href.
-    An href should be given for normal assets, but can be None for Item Asset
-    Definitions.
+    Creates a basic COG asset dict with shared core properties and optionally an
+    href. An href should be given for normal assets, but can be None for Item
+    Asset Definitions.
 
     Args:
         key (str):
         cog_href (str): The URL to the asset
 
     Returns:
-        dict: Basic Asset object
+        Dict: Basic Asset object
     """
     asset: Dict[str, Any] = constants.COG_ASSETS[key].copy()
     asset["type"] = constants.COG_MEDIA_TYPE
@@ -203,10 +236,7 @@ class COGMetadata:
         end_datetime = f"{fileparts[-4]}-12-31T23:59:59Z"
         version = fileparts[-3]
         tile = fileparts[-2]
-        title = (
-            f"European Space Agency Climate Change Initiative (ESA CCI) "
-            f"{fileparts[-4]} Land Cover Map - Tile {tile}"
-        )
+        title = f"ESA CCI Land Cover Map for Year {fileparts[-4]}, Tile {tile}"
 
         return COGMetadata(
             id=id,
