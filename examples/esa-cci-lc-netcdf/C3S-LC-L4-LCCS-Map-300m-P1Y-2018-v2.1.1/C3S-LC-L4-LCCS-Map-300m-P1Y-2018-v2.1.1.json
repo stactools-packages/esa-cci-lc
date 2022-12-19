@@ -8,6 +8,18 @@
     "esa_cci_lc:version": "2.1.1",
     "title": "ESA CCI Land Cover Map for 2018",
     "proj:epsg": 4326,
+    "proj:shape": [
+      129600,
+      64800
+    ],
+    "proj:transform": [
+      -180.0,
+      0.002777777777778,
+      0.0,
+      90.0,
+      0.0,
+      -0.002777777777778
+    ],
     "processing:software": {
       "lc-sr": "1.0",
       "lc-classification": "1.0",
@@ -198,18 +210,6 @@
         }
       },
       "created": "2019-08-19T08:25:10Z",
-      "proj:shape": [
-        129600,
-        64800
-      ],
-      "proj:transform": [
-        -180.0,
-        0.002777777777778,
-        0.0,
-        90.0,
-        0.0,
-        -0.002777777777778
-      ],
       "roles": [
         "data",
         "quality",

@@ -80,6 +80,13 @@ def create_item(nc_href: str) -> Item:
 
         proj_attrs = ProjectionExtension.ext(item, add_if_missing=True)
         proj_attrs.epsg = constants.EPSG_CODE
+        proj_attrs.shape = [
+            dataset.dimensions["lon"].size,
+            dataset.dimensions["lat"].size,
+        ]
+        transform = netcdf.parse_transform(dataset)
+        if transform is not None:
+            proj_attrs.transform = transform
 
         software = netcdf.parse_software_history(dataset.history)
         if len(software) > 0 or len(dataset.source) > 0:
@@ -105,15 +112,6 @@ def create_item(nc_href: str) -> Item:
 
         common_asset = CommonMetadata(asset)
         common_asset.created = isoparse(dataset.creation_date)
-
-        proj_asset_attrs = ProjectionExtension.ext(asset, add_if_missing=True)
-        proj_asset_attrs.shape = [
-            dataset.dimensions["lon"].size,
-            dataset.dimensions["lat"].size,
-        ]
-        transform = netcdf.parse_transform(dataset)
-        if transform is not None:
-            proj_asset_attrs.transform = transform
 
         return item
 
