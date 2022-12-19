@@ -25,9 +25,9 @@ number as needed.
 
 - Nothing.
 
-## [0.1.0]
+## [0.1.0] - 2022-12-19
 
 - First release
 
-[Unreleased]: <https://github.com/stactools-packages/esa-cci-lc/tree/main/>
-[0.1.0]: <https://github.com/stactools-packages/esa-cci-lc/tree/v0.1.0/>
+[Unreleased]: <https://github.com/stactools-packages/esa-cci-lc/compare/v0.1.0..main>
+[0.1.0]: <https://github.com/stactools-packages/esa-cci-lc/releases/tag/v0.1.0/>
