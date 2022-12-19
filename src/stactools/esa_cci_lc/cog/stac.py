@@ -177,7 +177,7 @@ def create_collection(
     extensions = [
         constants.PROJECTION_EXTENSION,
         constants.RASTER_EXTENSION,
-        constants.CLASSIFICATION_EXTENSION
+        constants.CLASSIFICATION_EXTENSION,
     ]
 
     summaries = Summaries(

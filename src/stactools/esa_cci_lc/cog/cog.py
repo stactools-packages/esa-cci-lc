@@ -7,11 +7,11 @@ import numpy as np
 import rasterio
 import rasterio.crs
 import rasterio.shutil
+from pystac.utils import make_absolute_href
 from rasterio.io import MemoryFile
 from rasterio.windows import Window
 from shapely.geometry import box, mapping
 from stactools.core.io import ReadHrefModifier
-from pystac.utils import make_absolute_href
 
 from .. import classes, constants
 
