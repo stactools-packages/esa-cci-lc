@@ -21,7 +21,7 @@ from pystac.extensions.projection import ProjectionExtension
 from pystac.extensions.scientific import ScientificExtension
 from stactools.core.io import ReadHrefModifier
 
-from .. import classes, constants
+from .. import constants
 from .cog import COGMetadata, create_cog_asset, make_cog_tiles
 
 logger = logging.getLogger(__name__)
@@ -175,19 +175,14 @@ def create_collection(
     )
 
     extensions = [
-        constants.CLASSIFICATION_EXTENSION,
         constants.PROJECTION_EXTENSION,
         constants.RASTER_EXTENSION,
     ]
 
-    classification = classes.to_stac()
     summaries = Summaries(
         {
-            "classification:classes": classification,
             "esa_cci_lc:version": constants.VERSIONS,
-        },
-        # Up the maxcount for the classes, otherwise the classes will be omitted from output
-        maxcount=len(classification) + 1,
+        }
     )
 
     collection = Collection(

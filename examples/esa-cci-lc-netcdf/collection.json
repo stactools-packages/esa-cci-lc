@@ -71,7 +71,7 @@
   "sci:doi": "10.24381/cds.006f2c9a",
   "item_assets": {
     "netcdf": {
-      "title": "Original NetCDF 4 file",
+      "title": "ESA CCI NetCDF 4 File",
       "type": "application/netcdf",
       "roles": [
         "data",
