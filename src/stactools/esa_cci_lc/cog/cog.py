@@ -11,6 +11,7 @@ from rasterio.io import MemoryFile
 from rasterio.windows import Window
 from shapely.geometry import box, mapping
 from stactools.core.io import ReadHrefModifier
+from pystac.utils import make_absolute_href
 
 from .. import classes, constants
 
@@ -181,7 +182,7 @@ def create_cog_asset(
     asset: Dict[str, Any] = constants.COG_ASSETS[key].copy()
     asset["type"] = constants.COG_MEDIA_TYPE
     if cog_href:
-        asset["href"] = cog_href
+        asset["href"] = make_absolute_href(cog_href)
     if key in constants.TABLES:
         table = constants.TABLES[key]
         asset["classification:classes"] = classes.to_stac(table)

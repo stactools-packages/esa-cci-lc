@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional
 # import numpy as np
 from netCDF4 import Dataset, Variable
 from pystac.extensions.datacube import VariableType
+from pystac.utils import make_absolute_href
 
 from .. import constants
 
@@ -92,7 +93,7 @@ def create_asset(href: Optional[str] = None) -> Dict[str, Any]:
         "roles": constants.NETCDF_ROLES,
     }
     if href is not None:
-        asset["href"] = href
+        asset["href"] = make_absolute_href(href)
     return asset
 
 
