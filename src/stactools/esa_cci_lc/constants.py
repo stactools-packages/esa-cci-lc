@@ -189,7 +189,7 @@ COG_ASSETS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-NETCDF_ASSET_TITLE = "Original NetCDF 4 file"
+NETCDF_ASSET_TITLE = "ESA CCI Land Cover NetCDF 4 File"
 NETCDF_MEDIA_TYPE = "application/netcdf"
 NETCDF_ROLES = ["data", "quality", "source"]
 NETCDF_KEY = "netcdf"

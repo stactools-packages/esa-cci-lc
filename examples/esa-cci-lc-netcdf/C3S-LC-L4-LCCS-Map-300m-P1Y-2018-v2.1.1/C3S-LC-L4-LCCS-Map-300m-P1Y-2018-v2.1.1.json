@@ -80,7 +80,7 @@
     "netcdf": {
       "href": "../../../tests/data-files/external/C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc",
       "type": "application/netcdf",
-      "title": "ESA CCI NetCDF 4 File",
+      "title": "ESA CCI Land Cover NetCDF 4 File",
       "cube:dimensions": {
         "lat": {
           "type": "lat",
