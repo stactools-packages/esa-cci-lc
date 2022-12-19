@@ -212,8 +212,7 @@
       "created": "2019-08-19T08:25:10Z",
       "roles": [
         "data",
-        "quality",
-        "source"
+        "quality"
       ]
     }
   },

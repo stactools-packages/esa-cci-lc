@@ -194,7 +194,7 @@ def create_cog_asset(
         "sampling": constants.SAMPLING,
         "data_type": data_type,
     }
-    if nodata:
+    if nodata is not None:
         band["nodata"] = nodata
 
     asset["raster:bands"] = [band]

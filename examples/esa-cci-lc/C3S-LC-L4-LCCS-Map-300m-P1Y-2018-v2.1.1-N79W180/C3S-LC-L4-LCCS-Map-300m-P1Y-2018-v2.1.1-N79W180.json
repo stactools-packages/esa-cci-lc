@@ -84,8 +84,7 @@
         }
       ],
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ]
     },
     "current_pixel_state": {
@@ -117,7 +116,7 @@
         {
           "value": 5,
           "name": "cloud_shadow",
-          "description": "Cloud_shadow"
+          "description": "Cloud shadow"
         },
         {
           "value": 6,
@@ -134,8 +133,7 @@
         }
       ],
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ]
     },
     "lccs_class": {
@@ -393,12 +391,12 @@
         {
           "spatial_resolution": 300,
           "sampling": "area",
-          "data_type": "uint8"
+          "data_type": "uint8",
+          "nodata": 0
         }
       ],
       "roles": [
-        "data",
-        "cloud-optimized"
+        "data"
       ]
     },
     "observation_count": {
@@ -414,8 +412,7 @@
         }
       ],
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ]
     },
     "processed_flag": {
@@ -444,8 +441,7 @@
         }
       ],
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ]
     }
   },

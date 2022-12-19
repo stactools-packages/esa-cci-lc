@@ -138,8 +138,8 @@ DOI = "10.24381/cds.006f2c9a"
 
 # Assets
 COG_MEDIA_TYPE = "image/tiff; application=geotiff; profile=cloud-optimized"
-COG_ROLES_DATA = ["data", "cloud-optimized"]
-COG_ROLES_QUALITY = ["quality", "cloud-optimized"]
+COG_ROLES_DATA = ["data"]
+COG_ROLES_QUALITY = ["quality"]
 COG_TILE_DIM = 16200
 COG_ASSETS: Dict[str, Dict[str, Any]] = {
     "change_count": {
@@ -191,7 +191,7 @@ COG_ASSETS: Dict[str, Dict[str, Any]] = {
 
 NETCDF_ASSET_TITLE = "ESA CCI Land Cover NetCDF 4 File"
 NETCDF_MEDIA_TYPE = "application/netcdf"
-NETCDF_ROLES = ["data", "quality", "source"]
+NETCDF_ROLES = ["data", "quality"]
 NETCDF_KEY = "netcdf"
 NETCDF_DATA_SHAPE = [64800, 129600]
 

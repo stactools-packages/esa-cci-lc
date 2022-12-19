@@ -57,7 +57,7 @@ CURRENT_PIXEL_STATE_TABLE: List[List[Any]] = [
   [ 2, None, "water", "Clear water"],
   [ 3, None, "snow", "Clear snow / ice"],
   [ 4, None, "cloud", "Cloud"],
-  [ 5, None, "cloud_shadow", "Cloud_shadow"],
+  [ 5, None, "cloud_shadow", "Cloud shadow"],
   [ 6, None, "filled", "Filled"],
 ]
 

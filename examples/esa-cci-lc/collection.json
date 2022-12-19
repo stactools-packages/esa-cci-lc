@@ -65,6 +65,7 @@
   "stac_extensions": [
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/classification/v1.1.0/schema.json",
     "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
     "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
   ],
@@ -74,8 +75,7 @@
       "title": "Number of Class Changes",
       "description": "Number of years where land cover class changes have occurred, since 1992. 0 for stable, greater than 0 for changes.",
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ],
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "raster:bands": [
@@ -90,8 +90,7 @@
       "title": "Land Cover Pixel Type Mask",
       "description": "Pixel identification from satellite surface reflectance observations, mainly distinguishing between land, water, and snow/ice.",
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ],
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "classification:classes": [
@@ -118,7 +117,7 @@
         {
           "value": 5,
           "name": "cloud_shadow",
-          "description": "Cloud_shadow"
+          "description": "Cloud shadow"
         },
         {
           "value": 6,
@@ -139,8 +138,7 @@
       "title": "Land Cover Class Defined in the Land Cover Classification System",
       "description": "Land cover class per pixel, defined using the Land Cover Classification System developed by the United Nations Food and Agriculture Organization.",
       "roles": [
-        "data",
-        "cloud-optimized"
+        "data"
       ],
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "classification:classes": [
@@ -393,7 +391,8 @@
         {
           "spatial_resolution": 300,
           "sampling": "area",
-          "data_type": "uint8"
+          "data_type": "uint8",
+          "nodata": 0
         }
       ]
     },
@@ -401,8 +400,7 @@
       "title": "Number of Valid Observations",
       "description": "Number of valid satellite observations that have contributed to each pixel's classification.",
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ],
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "raster:bands": [
@@ -417,8 +415,7 @@
       "title": "Land Cover Map Processed Area Flag",
       "description": "Flag to mark areas that could not be classified.",
       "roles": [
-        "quality",
-        "cloud-optimized"
+        "quality"
       ],
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "classification:classes": [

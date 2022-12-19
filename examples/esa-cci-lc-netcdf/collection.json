@@ -73,8 +73,7 @@
       "type": "application/netcdf",
       "roles": [
         "data",
-        "quality",
-        "source"
+        "quality"
       ]
     }
   },
