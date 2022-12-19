@@ -18,7 +18,7 @@ from pystac.extensions.item_assets import AssetDefinition, ItemAssetsExtension
 from pystac.extensions.projection import ProjectionExtension
 from pystac.extensions.scientific import ScientificExtension
 
-from .. import classes, constants
+from .. import constants
 from . import netcdf
 
 
@@ -61,17 +61,9 @@ def create_item(nc_href: str) -> Item:
             "start_datetime": start_datetime,
             "end_datetime": end_datetime,
             "esa_cci_lc:version": dataset.product_version,
-            "classification:classes": classes.to_stac(),
         }
 
-        extensions = [
-            constants.CLASSIFICATION_EXTENSION,
-        ]
-        # todo: replace with raster extension from PySTAC
-        # https://github.com/stac-utils/pystac/issues/890
-
         item = Item(
-            stac_extensions=extensions,
             id=id,
             properties=properties,
             geometry=constants.GEOMETRY,
@@ -164,25 +156,13 @@ def create_collection(
         TemporalExtent([[start_datetime, end_datetime]]),
     )
 
-    classification = classes.to_stac()
     summaries = Summaries(
         {
-            "classification:classes": classification,
             "esa_cci_lc:version": constants.VERSIONS,
-        },
-        # Up the maxcount for the classes, otherwise the classes will be omitted from output
-        maxcount=len(classification) + 1,
+        }
     )
 
-    # todo: replace with Projection and raster extension from PySTAC
-    # https://github.com/stac-utils/pystac/issues/890
-    extensions = [
-        constants.CLASSIFICATION_EXTENSION,
-        constants.PROJECTION_EXTENSION,
-    ]
-
     collection = Collection(
-        stac_extensions=extensions,
         id=id,
         title=constants.NETCDF_COLLECTION_TITLE,
         description=constants.NETCDF_COLLECTION_DESCRIPTION,
