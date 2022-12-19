@@ -2,7 +2,7 @@ black
 codespell
 flake8
 isort
-mypy
+mypy >= 0.981 # https://github.com/python/mypy/issues/13627
 pre-commit
 pytest
 pytest-cov
