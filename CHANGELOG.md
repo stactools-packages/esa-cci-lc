@@ -11,7 +11,8 @@ number as needed.
 
 ### Added
 
-- Nothing.
+- Dedicated NetCDF and COG Collections
+- COG Tiler
 
 ### Deprecated
 
@@ -19,7 +20,7 @@ number as needed.
 
 ### Removed
 
-- Nothing.
+- Single Item creation containing worldwide COGs and NetCDF assets.
 
 ### Fixed
 
