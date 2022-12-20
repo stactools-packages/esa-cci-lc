@@ -57,11 +57,11 @@ CURRENT_PIXEL_STATE_TABLE: List[List[Any]] = [
   [ 2, None, "water", "Clear water"],
   [ 3, None, "snow", "Clear snow / ice"],
   [ 4, None, "cloud", "Cloud"],
-  [ 5, None, "cloud_shadow", "Cloud_shadow"],
+  [ 5, None, "cloud_shadow", "Cloud shadow"],
   [ 6, None, "filled", "Filled"],
 ]
 
-def to_stac(data: List[List[Any]] = TABLE, incldue_regional: bool = True) -> List[Dict[str, Any]]:
+def to_stac(data: List[List[Any]] = TABLE, include_regional: bool = True) -> List[Dict[str, Any]]:
   """
   Takes one of the internal tables and converts them to a STAC Class Object (Classification ext.)
   The internal tables are 2D arrays where the inner array has the following structure:
@@ -74,7 +74,7 @@ def to_stac(data: List[List[Any]] = TABLE, incldue_regional: bool = True) -> Lis
 
   Args:
       data (List[List[Any]]): A table to convert to STAC
-      incldue_regional (bool): Set to False to exclude regional classes
+      include_regional (bool): Set to False to exclude regional classes
 
   Returns:
       dict: Basic Asset object
@@ -84,7 +84,7 @@ def to_stac(data: List[List[Any]] = TABLE, incldue_regional: bool = True) -> Lis
     regional = False
     if len(cls) >= 5 and cls[4] is True:
       regional = True
-      if not incldue_regional:
+      if not include_regional:
         continue
 
     stac_class: Dict[str, Any] = {

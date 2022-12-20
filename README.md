@@ -11,33 +11,43 @@
 - STAC extensions used:
   - [classification](https://github.com/stac-extensions/classification/)
   - [datacube](https://github.com/stac-extensions/datacube/)
+  - [grid](https://github.com/stac-extensions/grid/)
+  - [item-assets](https://github.com/stac-extensions/item-assets)
   - [processing](https://github.com/stac-extensions/processing/)
-  - [proj](https://github.com/stac-extensions/projection/)
+  - [projection](https://github.com/stac-extensions/projection/)
   - [raster](https://github.com/stac-extensions/raster/)
-  - [version](https://github.com/stac-extensions/version/)
+  - [scientific](https://github.com/stac-extensions/scientific)
 - Extra fields:
-  - None
+  - `esa_cci_lc:version`: Land cover product version.
+- [Browse the example in human-readable form](https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/examples/catalog.json)
+
+## Background
 
 A stactools package for ESA's Climate Change Initiative (CCI) Land Cover (LC)
-product.
-
-This dataset provides global maps describing the land surface classes,
+product. The ESA CCI LC dataset provides global maps describing the land surface classes,
 which have been defined using the United Nations Food and Agriculture
 Organization's (UN FAO) Land Cover Classification System (LCCS).
 In addition to the land cover (LC) maps, four quality flags are produced to
 document the reliability of the classification and change detection.
-In order to ensure continuity, these land cover maps are consistent with the
-series of global annual LC maps from the 1990s to 2015 produced by the
-European Space Agency (ESA) Climate Change Initiative (CCI).
 
-This package can generate STAC files from netCDF files and that either link to
-the original netCDF files or to Cloud-Optimized GeoTiff (COG) files.
+Two STAC Collections, and corresponding Items, can be generated with this package:
+
+1. esa-cci-lc: A Collection of COG tiles generated from the source NetCDF data files.
+2. esa-cci-lc-netcdf: A Collection describing the source NetCDF data files.
+
+If you are interested in creating single STAC Items for each source NetCDF file along with worldwide COGs (not tiled), see release [v0.1.0](https://github.com/stactools-packages/esa-cci-lc/releases/tag/v0.1.0).
 
 ## STAC Examples
 
-- [Collection](examples/collection.json)
-- [Item](examples/item.json)
-- [Browse the example in human-readable form](https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/examples/collection.json)
+- Collections
+  - [Tiled COGs](examples/esa-cci-lc/collection.json)
+  - [Source NetCDF](examples/esa-cci-lc-netcdf/collection.json)
+
+- Items
+  - [Tiled COGs](examples/esa-cci-lc/C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180/C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1-N79W180.json)
+  - [Source NetCDF](examples/esa-cci-lc-netcdf/C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1/C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.json)
+
+The example Collections and Items in the `examples` directory can be created by running `./scripts/create_examples.py`.
 
 ## Installation
 
@@ -47,41 +57,19 @@ pip install stactools-esa-cci-lc
 
 ## Command-line Usage
 
+To create the NetCDF Collection:
+
+```shell
+stac esa-cci-lc netcdf create-collection collection.json
+```
+
+To convert a NetCDF to tiled COGs and create an Item for each tile:
+
+```shell
+stac esa-cci-lc cog create-items /path/to/source/file.nc /path/to/output/directory
+```
+
 Use `stac esa-cci-lc --help` to see all subcommands and options.
-
-### Collection
-
-Create a collection:
-
-```shell
-stac esa-cci-lc create-collection collection.json
-```
-
-Get information about all options for collection creation:
-
-```shell
-stac esa-cci-lc create-collection --help
-```
-
-### Item
-
-Create an item with netCDF and COG assets:
-
-```shell
-stac esa-cci-lc create-item /path/to/source/file.nc item.json --collection collection.json
-```
-
-Create an item with only COG assets:
-
-```shell
-stac esa-cci-lc create-item /path/to/source/file.nc item.json --collection collection.json --nonetcdf TRUE
-```
-
-Get information about all options for item creation:
-
-```shell
-stac esa-cci-lc create-item --help
-```
 
 ## Contributing
 
@@ -105,18 +93,3 @@ To run the tests:
 ```shell
 pytest -vv
 ```
-
-### Tests
-
-Due to the large file sizes, the data files for the tests are missing in this repository.
-To run the tests, please download the files for 1992, 2015, 2016 and 2020 from the
-[Climate Data Store](https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-land-cover?tab=form).
-You can download them all at once in a ZIP or gzipped TAR file and then extract the `.nc` files
-to the `tests/data-files/external` folder.
-
-The CI doesn't run any tests for item generation due to the missing data files.
-Please ensure you've tested the changes against the data files locally!
-
-Also, due to the long processing time of the tests with COGs conversion (in total 3-4 hours on 
-my local machine), the tests by default run without COG processing (i.e. `--nocog` is enabled).
-To run the tests with COG generation, please run `pytest -vv --withcog`.

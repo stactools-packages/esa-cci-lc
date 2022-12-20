@@ -1,10 +1,12 @@
+import re
 from typing import Any, Dict, List, Optional
 
 # import numpy as np
 from netCDF4 import Dataset, Variable
 from pystac.extensions.datacube import VariableType
+from pystac.utils import make_absolute_href
 
-from . import constants
+from .. import constants
 
 
 def to_cube_dimensions(dataset: Dataset) -> Dict[str, Any]:
@@ -86,12 +88,12 @@ def create_asset(href: Optional[str] = None) -> Dict[str, Any]:
         dict: Basic Asset object
     """
     asset: Dict[str, Any] = {
-        "title": constants.NETCDF_TITLE,
+        "title": constants.NETCDF_ASSET_TITLE,
         "type": constants.NETCDF_MEDIA_TYPE,
         "roles": constants.NETCDF_ROLES,
     }
     if href is not None:
-        asset["href"] = href
+        asset["href"] = make_absolute_href(href)
     return asset
 
 
@@ -137,3 +139,30 @@ def parse_transform(dataset: Dataset) -> Optional[List[float]]:
         ]
     else:
         return None
+
+
+def parse_software_history(history: str) -> Dict[str, str]:
+    """
+    Parses a comma delimited string with software and version number into
+    a dict compliant to `processing:software`.
+
+    Args:
+        history (str): string with software and version numbers
+
+    Returns:
+        Dict[str, str]
+    """
+    software: Dict[str, str] = {}
+    tools = re.findall(r"([\w-]+)-(\d+[.,]\d+)", history)
+    for tool in tools:
+        name = tool[0].strip()
+        version = tool[1].strip()
+        if name in software:
+            # solve conflicts
+            software[f"{name}(1)"] = software[name]
+            software[f"{name}(2)"] = version
+            del software[name]
+        else:
+            software[name] = version
+
+    return software

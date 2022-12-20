@@ -1,0 +1,157 @@
+{
+  "type": "Collection",
+  "id": "esa-cci-lc-netcdf",
+  "stac_version": "1.0.0",
+  "description": "The ESA Climate Change Initiative (CCI) dataset provides global maps describing land surface classes, which have been defined using the United Nations Food and Agriculture Organization's (UN FAO) Land Cover Classification System (LCCS). In addition to the land cover (LC) maps, four quality flags are produced to document the reliability of the classification and change detection. This Collection describes the source NetCDF data.",
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "ESA CCI Land Cover"
+    },
+    {
+      "rel": "license",
+      "href": "https://cds.climate.copernicus.eu/api/v2/terms/static/satellite-land-cover.pdf",
+      "type": "text/html",
+      "title": "ESA CCI license"
+    },
+    {
+      "rel": "license",
+      "href": "https://cds.climate.copernicus.eu/api/v2/terms/static/licence-to-use-copernicus-products.pdf",
+      "type": "text/html",
+      "title": "COPERNICUS license"
+    },
+    {
+      "rel": "license",
+      "href": "https://cds.climate.copernicus.eu/api/v2/terms/static/vito-proba-v.pdf",
+      "type": "text/html",
+      "title": "VITO License"
+    },
+    {
+      "rel": "about",
+      "href": "https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-land-cover",
+      "type": "text/html",
+      "title": "Product Landing Page"
+    },
+    {
+      "rel": "about",
+      "href": "https://datastore.copernicus-climate.eu/documents/satellite-land-cover/D5.3.1_PUGS_ICDR_LC_v2.1.x_PRODUCTS_v1.1.pdf",
+      "type": "application/pdf",
+      "title": "Product user guide for version 2.1"
+    },
+    {
+      "rel": "about",
+      "href": "https://datastore.copernicus-climate.eu/documents/satellite-land-cover/D3.3.11-v1.0_PUGS_CDR_LC-CCI_v2.0.7cds_Products_v1.0.1_APPROVED_Ver1.pdf",
+      "type": "application/pdf",
+      "title": "Product user guide for version 2.0"
+    },
+    {
+      "rel": "cite-as",
+      "href": "https://doi.org/10.24381/cds.006f2c9a"
+    },
+    {
+      "rel": "item",
+      "href": "./C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1/C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "ESA CCI Land Cover"
+    }
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
+  ],
+  "sci:doi": "10.24381/cds.006f2c9a",
+  "item_assets": {
+    "netcdf": {
+      "title": "ESA CCI Land Cover NetCDF 4 File",
+      "type": "application/netcdf",
+      "roles": [
+        "data",
+        "quality"
+      ]
+    }
+  },
+  "title": "ESA Climate Change Initiative Land Cover Maps - NetCDF Data",
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -180.0,
+          -90.0,
+          180.0,
+          90.0
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2018-01-01T00:00:00Z",
+          "2018-12-31T23:59:59Z"
+        ]
+      ]
+    }
+  },
+  "license": "proprietary",
+  "keywords": [
+    "Land Cover",
+    "ESA",
+    "CCI",
+    "Global"
+  ],
+  "providers": [
+    {
+      "name": "VITO",
+      "description": "Provides the PROBA-V source data (for v2.0).",
+      "roles": [
+        "licensor"
+      ],
+      "url": "https://vito.be"
+    },
+    {
+      "name": "UCLouvain",
+      "description": "UCLouvain produces the dataset (v2.1) for the ESA Climate Change Initiative.",
+      "roles": [
+        "producer"
+      ],
+      "url": "https://uclouvain.be"
+    },
+    {
+      "name": "Brockmann Consult",
+      "description": "Brockmann Consult is responsible for the required pre-processing and the distribution of the dataset (v2.1).",
+      "roles": [
+        "processor"
+      ],
+      "url": "https://brockmann-consult.de"
+    },
+    {
+      "name": "ESA Climate Change Initiative",
+      "description": "The ESA Climate Change Initiative (CCI) is leading the product creation.",
+      "roles": [
+        "licensor"
+      ],
+      "url": "http://esa-landcover-cci.org"
+    },
+    {
+      "name": "Copernicus",
+      "description": "Hosts the data on the Copernicus Climate Data Store (CDS).",
+      "roles": [
+        "host",
+        "licensor"
+      ],
+      "url": "https://copernicus.eu"
+    }
+  ],
+  "summaries": {
+    "esa_cci_lc:version": [
+      "2.0.7cds",
+      "2.1.1"
+    ]
+  }
+}

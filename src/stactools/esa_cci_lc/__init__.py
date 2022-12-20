@@ -1,10 +1,6 @@
 import stactools.core
 from stactools.cli.registry import Registry
 
-from stactools.esa_cci_lc.stac import create_collection, create_item
-
-__all__ = ["create_collection", "create_item"]
-
 stactools.core.use_fsspec()
 
 
