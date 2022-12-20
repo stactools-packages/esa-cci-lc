@@ -49,6 +49,12 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.cfg', '**/requirements-dev.txt') }}
           restore-keys: ${{ runner.os }}-pip-
+      - name: Set up external data cache
+        uses: actions/cache@v2
+        with:
+          path: tests/data-files/external
+          key: ${{ runner.os }}-external-data-${{ hashFiles('tests/**/*.py') }}
+          restore-keys: ${{ runner.os }}-external-data-
       - name: Set up Conda with Python ${{ matrix.python-version }}
         uses: conda-incubator/setup-miniconda@v2
         with:
