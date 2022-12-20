@@ -120,6 +120,7 @@ PROJECTION_EXTENSION = "https://stac-extensions.github.io/projection/v1.0.0/sche
 # For item asset definitions, until supported: https://github.com/stac-utils/pystac/issues/890
 RASTER_EXTENSION = "https://stac-extensions.github.io/raster/v1.1.0/schema.json"
 VERSION_EXTENSION = "https://stac-extensions.github.io/version/v1.1.0/schema.json"
+GRID_EXTENSION = "https://stac-extensions.github.io/grid/v1.0.0/schema.json"
 
 # Common
 V1 = "2.0.7cds"

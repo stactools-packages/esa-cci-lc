@@ -104,7 +104,7 @@ def create_item_from_asset_list(
             "start_datetime": metadata.start_datetime,
             "end_datetime": metadata.end_datetime,
             "esa_cci_lc:version": metadata.version,
-            "esa_cci_lc:tile": metadata.tile,
+            "grid:code": f"ESACCI-{metadata.tile}",
         },
     )
     item.common_metadata.created = datetime.now(tz=timezone.utc)
@@ -132,6 +132,7 @@ def create_item_from_asset_list(
 
     item.stac_extensions.append(constants.CLASSIFICATION_EXTENSION)
     item.stac_extensions.append(constants.RASTER_EXTENSION)
+    item.stac_extensions.append(constants.GRID_EXTENSION)
 
     return item
 
