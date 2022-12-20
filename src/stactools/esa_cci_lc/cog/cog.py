@@ -243,7 +243,7 @@ class COGMetadata:
             id=id,
             title=title,
             geometry=geometry,
-            bbox=bbox,
+            bbox=list(bbox),
             start_datetime=start_datetime,
             end_datetime=end_datetime,
             version=version,
