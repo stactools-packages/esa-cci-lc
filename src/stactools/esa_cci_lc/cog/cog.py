@@ -83,7 +83,8 @@ def make_cog_tiles(
                             cog_profile_mode = COG_PROFILE.copy()
                             cog_profile_mode["overview_resampling"] = "mode"
                             rasterio.shutil.copy(mem, cog_path, **cog_profile_mode)
-                        rasterio.shutil.copy(mem, cog_path, **COG_PROFILE)
+                        else:
+                            rasterio.shutil.copy(mem, cog_path, **COG_PROFILE)
 
                 cog_paths[window["tile"]].append(str(cog_path))
 
