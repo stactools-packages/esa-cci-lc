@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 # Value, RGB, Name, Description, Regional (def: False), Nodata (def: False)
 
 TABLE: List[List[Any]] = [
-    [  0, [  0,  0,  0], "no-data", "No Data", False, True],
+    [  0, [  0,  0,  0], "no-data", "No data", False, True],
     [ 10, [255,255,100], "cropland-1", "Cropland, rainfed"],
     [ 11, [255,255,100], "cropland-1a", "Cropland, rainfed, herbaceous cover", True],
     [ 12, [255,255,  0], "cropland-1b", "Cropland, rainfed, tree, or shrub cover", True],

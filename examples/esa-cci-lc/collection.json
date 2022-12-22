@@ -145,7 +145,7 @@
         {
           "value": 0,
           "name": "no-data",
-          "description": "No Data",
+          "description": "No data",
           "color_hint": "000000",
           "no_data": true
         },
