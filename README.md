@@ -11,7 +11,6 @@
 - STAC extensions used:
   - [classification](https://github.com/stac-extensions/classification/)
   - [datacube](https://github.com/stac-extensions/datacube/)
-  - [grid](https://github.com/stac-extensions/grid/)
   - [item-assets](https://github.com/stac-extensions/item-assets)
   - [processing](https://github.com/stac-extensions/processing/)
   - [projection](https://github.com/stac-extensions/projection/)
@@ -19,6 +18,7 @@
   - [scientific](https://github.com/stac-extensions/scientific)
 - Extra fields:
   - `esa_cci_lc:version`: Land cover product version.
+  - `esa_cci_lc:tile`: Geographic coordinate of the lower left corner of the COG tile, rounded to the nearest degree, e.g., N45W180.
 - [Browse the example in human-readable form](https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/stactools-packages/esa-cci-lc/main/examples/catalog.json)
 
 ## Background
