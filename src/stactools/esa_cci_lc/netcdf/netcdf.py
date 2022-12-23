@@ -27,8 +27,8 @@ def to_cube_dimensions(dataset: Dataset) -> Dict[str, Any]:
             index_var = dataset.variables[dim.name]
             attrs = index_var.ncattrs()
             if "valid_min" in attrs and "valid_max" in attrs:
-                min = index_var.getncattr("valid_min")
-                max = index_var.getncattr("valid_max")
+                min = float(index_var.getncattr("valid_min"))
+                max = float(index_var.getncattr("valid_max"))
                 stac_dim["extent"] = [min, max]
             else:
                 stac_dim["values"] = index_var[...].tolist()
